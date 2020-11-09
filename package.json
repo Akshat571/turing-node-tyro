@@ -1,0 +1,22 @@
+{
+  "name": "tyro-backend-turing",
+  "version": "1.0.0",
+  "description": "Backend of Project Tyro",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Akshat571/tyro-backend-turing.git"
+  },
+  "author": "Akshatha Janardhan, Akshat Divya",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Akshat571/tyro-backend-turing/issues"
+  },
+  "homepage": "https://github.com/Akshat571/tyro-backend-turing#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
