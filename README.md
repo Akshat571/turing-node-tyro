@@ -1,2 +1,2 @@
-# tyro_backend_turing
+# tyro-backend-turing
 Backend of Project Tyro
