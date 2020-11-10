@@ -1,3 +1,4 @@
+const { findOne } = require('../models/user');
 const  User  = require('../models/user');
 //const mongoose = require("mongoose");
 
@@ -11,3 +12,4 @@ module.exports.createUser=function(name,email,password,success){
     });
     
 }
+

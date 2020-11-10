@@ -14,15 +14,22 @@ module.exports.registerUser=function(name,email,password,callback){
     password=hash;
     userDao.createUser(name,email,password,function(error,user){
     if(error){
-            callback(error,null);
-             return;
-            }else{
+        
+                callback("Mail already exists",null);
+                return;
+            }
+           
+            else{
                     var token=jwt.sign({
                     name:user.name,
                     email:user.email
                 },
-                "secret")
+                "secret",
+                {
+                    expiresIn: "1h"
+                })
                         }
                         callback(error,user,token)
                     })
+                
 }

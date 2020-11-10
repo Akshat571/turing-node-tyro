@@ -16,6 +16,8 @@ router.post('/',function(req,res){
                 })
             }
         }
+    }else{
+        handleResponse("Name cannot be empty",null,res);
     }
 })
 module.exports=router;
