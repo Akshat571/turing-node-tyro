@@ -1,5 +1,5 @@
-const userDao=require('../dao/userDao')
-const User = require('../models/user')
+const userDao=require('../dao/userDao');
+const User = require('../models/user');
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -11,18 +11,29 @@ module.exports.registerUser=function(name,email,password,callback){
                         name:name,
                         password:hash
                     });
-    password=hash;
-    userDao.createUser(name,email,password,function(error,user){
-    if(error){
+    password=hash; // TODO do not assign props into new value 
+    userDao.createUser(name,email,password,function(error,user){        
+        if(error){
+                callback(error,null);
+                return;
+                }else{
+                        var token=jwt.sign({
+                        name:user.name,
+                        email:user.email
+                    },
+                    "secret") // TODO 
+                            }
+                            callback(error,user,token)
+                        })
+}
+
+module.exports.retriveUser = function(email, callback) {
+    console.log("in controller");
+    userDao.getUser(email.email,function(error,docs){
+        if(error || docs == null) {
             callback(error,null);
-             return;
-            }else{
-                    var token=jwt.sign({
-                    name:user.name,
-                    email:user.email
-                },
-                "secret")
-                        }
-                        callback(error,user,token)
-                    })
+        } else {
+             callback(error,docs);
+        } 
+    });
 }

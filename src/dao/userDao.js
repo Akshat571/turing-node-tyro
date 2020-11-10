@@ -11,3 +11,15 @@ module.exports.createUser=function(name,email,password,success){
     });
     
 }
+
+module.exports.getUser = function(email,callback) {
+    User.findOne({email:email},function(err,docs) {
+        if(err) {
+            // console.log("================ I AM HERE =============");
+            // console.log(err);
+            callback(err,null);
+        } else {
+            callback(err,docs);
+        }
+    });
+}
