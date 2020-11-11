@@ -4,7 +4,7 @@ module.exports.start = function (success) {
   var dbURI = "mongodb://localhost/tyroDB";
 
   // Create the database connection
-  mongoose.connect(dbURI);
+  mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
 
   // CONNECTION EVENTS
   // When successfully connected
@@ -24,4 +24,10 @@ module.exports.start = function (success) {
   });
 
   // If the Node process ends, close the Mongoose connection
+  process.on('SIGINT', function () {
+    mongoose.connection.close(function () {
+      console.log('Mongoose default connection disconnected through app termination');
+      process.exit(0);
+    });
+  });
 };
