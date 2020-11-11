@@ -14,7 +14,7 @@ module.exports.registerUser = function (name, email, password, callback) {
   password = hash;
   userDao.createUser(name, email, password, function (error, user) {
     if (error) {
-      callback(error, null);
+      callback("Mail exisits", null);
       return;
     } else {
       var token = jwt.sign(
@@ -22,7 +22,10 @@ module.exports.registerUser = function (name, email, password, callback) {
           name: user.name,
           email: user.email,
         },
-        "secret"
+        "secret",
+        {
+          expiresIn: "1h",
+        }
       );
     }
     callback(error, user, token);

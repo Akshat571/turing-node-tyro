@@ -8,31 +8,24 @@ const User = require("../models/user");
 const { handleResponse } = require("../utils");
 const { json } = require("express");
 
-router.post("/signup", function (req, res) {
-  console.log("in router");
-  if (req.body.name != null) {
-    if (req.body.email != null) {
-      if (req.body.password != null) {
-        controller.registerUser(
-          req.body.name,
-          req.body.email,
-          req.body.password,
-          function (error, result, token) {
-            handleResponse(error, { token }, res);
-          }
-        );
+router.post('/signup', function (req, res) {
+  const { name, email, password } = req.body;
+  if (name != null && email != null && password != null) {
+    controller.registerUser(name, email, password, function (error, result, token) {
+      if (error) {
+        res.status(409);
       }
-    }
+      handleResponse(error, { token }, res);
+    })
+  } else {
+    return res.status(204).json({});
   }
-});
+})
 
 router.post("/login", (req, res) => {
   const email = req.body.email;
   const plainPassword = req.body.password;
-  console.log("I am in userRouter/login");
-  console.log(email, plainPassword);
   if (email != (null || undefined) && plainPassword != (null || undefined)) {
-    console.log("Inside if lol");
     controller.retriveUser({ email: email }, function (error, user) {
       if (error || user == null) {
         return res.status(401).json({
