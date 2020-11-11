@@ -1,6 +1,5 @@
 const path = require('path');
-//const cookieParser = require('cookie-parser');
-//const logger = require('morgan');
+
 const express = require('express');
 
 module.exports = function(app) {
