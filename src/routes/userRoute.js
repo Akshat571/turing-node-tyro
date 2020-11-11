@@ -5,7 +5,7 @@ const controller=require('../controllers/userController');
 const User=require('../models/user');
 const { handleResponse } = require('../utils');
 
-router.post('/',function(req,res){
+router.post('/signup',function(req,res){
   
     console.log('in router');
     if(req.body.name!=null){
@@ -16,8 +16,6 @@ router.post('/',function(req,res){
                 })
             }
         }
-    }else{
-        handleResponse("Name cannot be empty",null,res);
     }
 })
 module.exports=router;
