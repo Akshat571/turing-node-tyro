@@ -1,5 +1,5 @@
 function handleResponse(error, result, res) {
-    if(error != null ) {
+    if (error != null) {
         res.send({
             error: error
         });

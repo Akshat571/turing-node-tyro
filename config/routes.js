@@ -1,7 +1,6 @@
-var userRoute = require('../src/routes/userRoute');
-var app=require('../app');
+var userRoute = require("../src/routes/userRoute");
+app = require("../app");
 
-module.exports = function(app) {
-    app.use('/user', userRoute);
-   
-}
+module.exports = function (app) {
+  app.use("/user", userRoute);
+};
