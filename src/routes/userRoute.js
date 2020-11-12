@@ -29,9 +29,7 @@ router.post("/login", (req, res) => {
   if (email != (null || undefined) && plainPassword != (null || undefined)) {
     controller.retriveUser({ email: email }, function (error, user) {
       if (error || user == null) {
-        return res.status(401).json({
-          message: "Auth Unsuccessfull",
-        });
+        return res.status(401);
       } else {
         bcrypt.compare(plainPassword, user.password, (err, result) => {
           if (err) {
