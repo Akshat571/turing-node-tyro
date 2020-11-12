@@ -1,11 +1,11 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const router = express.Router();
-const jwt = require("jsonwebtoken");
 const url = require("url");
 const controller = require("../controllers/userController");
 const User = require("../models/user");
 const { handleResponse } = require("../utils");
+const { tokenGenerator } = require("../utils");
 const { json } = require("express");
 
 router.post('/signup', function (req, res) {
@@ -40,16 +40,7 @@ router.post("/login", (req, res) => {
             });
           }
           if (result) {
-            const token = jwt.sign(
-              {
-                name: user.name,
-                email: user.email,
-              },
-              process.env.JWT_KEY || "secret",
-              {
-                expiresIn: "1h",
-              }
-            );
+            const token = tokenGenerator(user.name, user.email, "secret")
             res.setHeader('Authorization', 'Bearer ' + token);
             return res.status(200).json({});
           }

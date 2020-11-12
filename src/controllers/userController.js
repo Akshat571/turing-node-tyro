@@ -3,30 +3,17 @@ const User = require("../models/user");
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { tokenGenerator } = require("../utils");
 
 module.exports.registerUser = function (name, email, password, callback) {
-  var hash = bcrypt.hashSync(password, 10);
-  const user = new User({
-    _id: email,
-    name: name,
-    password: hash,
-  });
-  password = hash;
+  var password = bcrypt.hashSync(password, 10);
   userDao.createUser(name, email, password, function (error, user) {
     if (error) {
       callback("Mail exisits", null);
       return;
     } else {
-      var token = jwt.sign(
-        {
-          name: user.name,
-          email: user.email,
-        },
-        "secret",
-        {
-          expiresIn: "1h",
-        }
-      );
+      var secret="secret";
+      var token =tokenGenerator(name,email,secret);
     }
     callback(error, user, token);
   });
