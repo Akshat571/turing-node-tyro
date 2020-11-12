@@ -9,13 +9,18 @@ module.exports.registerUser = function (name, email, password, callback) {
   var password = bcrypt.hashSync(password, 10);
   userDao.createUser(name, email, password, function (error, user) {
     if (error) {
-      callback("Mail exisits", null);
+      callback("Mail already there", null);
       return;
     } else {
-      var secret="secret";
-      var token =tokenGenerator(name,email,secret);
+      var secret = "secret";
+      tokenGenerator(name, email, secret, function (error, token) {
+        if (error) {
+          callback(error, null);
+        } else {
+          callback(error, token);
+        }
+      })
     }
-    callback(error, user, token);
   });
 };
 
