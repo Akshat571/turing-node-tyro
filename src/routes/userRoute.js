@@ -15,7 +15,8 @@ router.post('/signup', function (req, res) {
       if (error) {
         res.status(409);
       }
-      handleResponse(error, { token }, res);
+      res.setHeader('Authorization', 'Bearer ' + token);
+      handleResponse(error, {}, res);
     })
   } else {
     return res.status(204).json({});
@@ -49,9 +50,8 @@ router.post("/login", (req, res) => {
                 expiresIn: "1h",
               }
             );
-            return res.status(200).json({
-              token: token,
-            });
+            res.setHeader('Authorization', 'Bearer ' + token);
+            return res.status(200).json({});
           }
           return res.status(401).json({
             message: "Auth Unsucessfull/Bad Password",
