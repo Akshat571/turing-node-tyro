@@ -12,10 +12,16 @@ module.exports.registerUser = function (name, email, password, callback) {
       callback("Mail exisits", null);
       return;
     } else {
-      var secret="secret";
-      var token =tokenGenerator(name,email,secret);
+      var secret = "secret";
+      tokenGenerator(name, email, secret, function (error, token) {
+        if (error) {
+          callback(error, null);
+        } else {
+          console.log("token in controller" + token);
+          callback(error, token);
+        }
+      })
     }
-    callback(error, user, token);
   });
 };
 
