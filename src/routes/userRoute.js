@@ -28,7 +28,7 @@ router.post('/signup', function (req, res) {
       handleResponse(error.error, {}, res);
     })
   } else {
-    return res.status(StatusCodes.NO_CONTENT);
+    res.status(StatusCodes.NO_CONTENT).send(ReasonPhrases.NO_CONTENT);
   }
 })
 
