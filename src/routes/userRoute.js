@@ -15,20 +15,28 @@ router.post('/signup', function (req, res) {
   if (name != null && email != null && password != null) {
     controller.registerUser(name, email, password, function (error, token) {
       if (error) {
-        res.status(StatusCodes.CONFLICT).send(ReasonPhrases.CONFLICT);
+        res.status(StatusCodes.CONFLICT).json({
+          "message": error
+        })
         return;
       } else {
         if (token != null) {
           res.setHeader('Authorization', 'Bearer ' + token);
-          res.status(StatusCodes.OK).send(ReasonPhrases.OK);
+          res.status(StatusCodes.OK).json({
+            "message": "SUCCESS"
+          })
         } else {
-          res.status(StatusCodes.UNAUTHORIZED).send(ReasonPhrases.UNAUTHORIZED);
+          res.status(StatusCodes.UNAUTHORIZED).json({
+            "message": "UNAUTHORIZED"
+          });
         }
       }
       handleResponse(error.error, {}, res);
     })
   } else {
-    res.status(StatusCodes.NO_CONTENT).send(ReasonPhrases.NO_CONTENT);
+    res.status(StatusCodes.NO_CONTENT).json({
+      "message": "NO CONTENT"
+    });
   }
 })
 
@@ -45,7 +53,7 @@ router.post("/login", async (req, res) => {
         bcrypt.compare(plainPassword, user.password, (error, result) => {
           if (error) {
             return res.status(StatusCodes.UNAUTHORIZED).json({
-              "error": err
+              "error": error
             });
           }
           if (result) {
@@ -56,18 +64,24 @@ router.post("/login", async (req, res) => {
                 })
               } else {
                 res.setHeader('Authorization', 'Bearer ' + token);
-                res.status(StatusCodes.OK).send(ReasonPhrases.OK);
+                res.status(StatusCodes.OK).json({
+                  message: "SUCCESS"
+                })
 
               }
             });
           } else {
-            res.status(StatusCodes.UNAUTHORIZED).send(ReasonPhrases.UNAUTHORIZED);
+            res.status(StatusCodes.UNAUTHORIZED).json({
+              message: "UNAUTHORIZED"
+            });
           }
         });
       }
     });
   } else {
-    return res.status(StatusCodes.NO_CONTENT).send(ReasonPhrases.NO_CONTENT);
+    return res.status(StatusCodes.NO_CONTENT).json({
+      message: "NO CONTENT"
+    });
   }
 });
 
