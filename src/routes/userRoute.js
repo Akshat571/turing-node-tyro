@@ -1,14 +1,10 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const router = express.Router();
-const url = require("url");
 const controller = require("../controllers/userController");
-const User = require("../models/user");
 const { handleResponse } = require("../utils");
 const { tokenGenerator } = require("../utils");
-const { json } = require("express");
 const StatusCodes = require('http-status-codes').StatusCodes;
-const ReasonPhrases = require('http-status-codes').ReasonPhrases;
 
 router.post('/signup', function (req, res) {
   const { name, email, password } = req.body;
@@ -47,7 +43,7 @@ router.post("/login", async (req, res) => {
     controller.retriveUser({ email: email }, function (error, user) {
       if (error || user === null) {
         return res.status(StatusCodes.UNAUTHORIZED).json({
-          "error": error
+          "error": "UNAUTHORIZED"
         });
       } else {
         bcrypt.compare(plainPassword, user.password, (error, result) => {
