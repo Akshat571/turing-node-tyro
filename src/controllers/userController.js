@@ -6,7 +6,7 @@ module.exports.registerUser = function (name, email, password, callback) {
   var password = bcrypt.hashSync(password, 10);
   userDao.createUser(name, email, password, function (error, user) {
     if (error) {
-      callback("CONFLICT", null);
+      callback(error, null);
       return;
     } else {
       var secret = "secret";

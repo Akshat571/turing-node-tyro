@@ -11,8 +11,14 @@ router.post('/signup', function (req, res) {
   if (name != null && email != null && password != null) {
     controller.registerUser(name, email, password, function (error, token) {
       if (error) {
+        if (error.name === "ValidationError") {
+          res.status(StatusCodes.BAD_REQUEST).json({
+            message: "BAD REQUEST"
+          })
+          return;
+        }
         res.status(StatusCodes.CONFLICT).json({
-          "message": error
+          "message": "CONFLICT"
         })
         return;
       } else {
@@ -36,7 +42,7 @@ router.post('/signup', function (req, res) {
   }
 })
 
-router.post("/login", async (req, res) => {
+router.post("/login", (req, res) => {
   const email = req.body.email;
   const plainPassword = req.body.password;
   if (email != (null || undefined) && plainPassword != (null || undefined)) {
