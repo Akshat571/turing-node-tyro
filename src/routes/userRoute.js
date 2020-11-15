@@ -9,32 +9,40 @@ const StatusCodes = require('http-status-codes').StatusCodes;
 router.post('/signup', function (req, res) {
   const { name, email, password } = req.body;
   if (name != null && email != null && password != null) {
-    controller.registerUser(name, email, password, function (error, token) {
-      if (error) {
-        if (error.name === "ValidationError") {
-          res.status(StatusCodes.BAD_REQUEST).json({
-            message: "BAD REQUEST"
+    if (password.length < 2) {
+      res.status(StatusCodes.BAD_REQUEST).json({
+        message: "BAD REQUEST"
+      })
+      return;
+    } else {
+      controller.registerUser(name, email, password, function (error, token) {
+        if (error) {
+          if (error.name === "ValidationError") {
+            res.status(StatusCodes.BAD_REQUEST).json({
+              message: "BAD REQUEST"
+            })
+            return;
+          }
+          res.status(StatusCodes.CONFLICT).json({
+            "message": "CONFLICT"
           })
           return;
-        }
-        res.status(StatusCodes.CONFLICT).json({
-          "message": "CONFLICT"
-        })
-        return;
-      } else {
-        if (token != null) {
-          res.setHeader('Authorization', 'Bearer ' + token);
-          res.status(StatusCodes.OK).json({
-            "message": "SUCCESS"
-          })
         } else {
-          res.status(StatusCodes.UNAUTHORIZED).json({
-            "message": "UNAUTHORIZED"
-          });
+          if (token != null) {
+            res.setHeader('Authorization', 'Bearer ' + token);
+            res.status(StatusCodes.OK).json({
+              "message": "SUCCESS"
+            })
+          } else {
+            res.status(StatusCodes.UNAUTHORIZED).json({
+              "message": "UNAUTHORIZED"
+            });
+          }
         }
-      }
-      handleResponse(error.error, {}, res);
-    })
+        handleResponse(error.error, {}, res);
+      })
+    }
+
   } else {
     res.status(StatusCodes.NO_CONTENT).json({
       "message": "NO CONTENT"
