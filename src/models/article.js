@@ -4,7 +4,7 @@ const Topic = require("./topic");
 const Schema = mongoose.Schema;
 
 const ArticleSchema = new Schema({
-    _id: Schema.Types.ObjectId,
+   // _id: Schema.Types.ObjectId,
     author: { type: Schema.Types.ObjectId, ref: 'User' },
     title: {
         type: String,
@@ -16,7 +16,7 @@ const ArticleSchema = new Schema({
     },
     topics: [{ type: Schema.Types.ObjectId, ref: 'Topic' }],
     count: { type: Number },
-    CreatedOn: { type: Date },
+    createdOn: { type: Date },
 });
 
 module.exports = mongoose.model("Article", ArticleSchema);
