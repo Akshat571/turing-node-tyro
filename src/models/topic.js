@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 
 
 const TopicSchema = new Schema({
-    _id: Schema.Types.ObjectId,
+    
     topicName: {
         type: String,
         required: true,

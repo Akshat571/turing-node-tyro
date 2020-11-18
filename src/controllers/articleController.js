@@ -8,7 +8,6 @@ module.exports.publishPost = function (title, topics, content, author, callback)
            
         } else {
             const authorId=user._id;
-            console.log("Am the author-->",authorId);
             articleDao.createArticle(title, topics, content, authorId, function (error, newArticle) {
                 if (error) {
                     callback(error, null);

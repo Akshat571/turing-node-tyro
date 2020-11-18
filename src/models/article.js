@@ -16,7 +16,7 @@ const ArticleSchema = new Schema({
     },
     topics: [{ type: Schema.Types.ObjectId, ref: 'Topic' }],
     count: { type: Number },
-    CreatedOn: { type: Date },
+    createdOn: { type: Date },
 });
 
 module.exports = mongoose.model("Article", ArticleSchema);

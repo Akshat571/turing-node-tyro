@@ -6,9 +6,7 @@ const { handleResponse, getPayload, verifyToken } = require("../utils");
 const StatusCodes = require('http-status-codes').StatusCodes;
 
 router.post('/createPost', function (req, res) {
-    console.log("hi");
     const { title, topics, content } = req.body;
-    console.log(title, topics, content);
     if (title != null && content != null && topics != null) {
         const bearerHeader = req.headers['authorization'];
         if (bearerHeader == null || bearerHeader == undefined) {
@@ -17,9 +15,7 @@ router.post('/createPost', function (req, res) {
             })
             return;
         }
-        console.log("Header with bearer -->", bearerHeader);
         var token = getPayload(bearerHeader);
-        console.log("Token -->", token);
         if (token == null) {
             res.status(StatusCodes.BAD_REQUEST).json({
                 message: "BAD REQUEST"
@@ -34,24 +30,22 @@ router.post('/createPost', function (req, res) {
                     })
                 } else {
                     var author = verifiedJwt.email;
-                    console.log("Auther--->", author);
                     controller.publishPost(title, topics, content, author, function (error, article) {
                         if (error) {
-                            console.log("Inside route -->",error);
-                             res.status(StatusCodes.BAD_REQUEST).json({
+                            res.status(StatusCodes.BAD_REQUEST).json({
                                 "message": error.name
                             })
                             return;
 
                         } else {
                             return res.status(StatusCodes.OK).json({
-                                "message": "SUCCESS"
+                                result: {
+                                    "message": "post published"
+                                }
                             })
                         }
                     })
-                    return res.status(StatusCodes.OK).json({
-                        message: "ok"
-                    })
+
                 }
             })
         }

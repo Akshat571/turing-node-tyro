@@ -26,7 +26,6 @@ module.exports.tokenGenerator = function (name, email, secret, callback) {
 
 module.exports.verifyToken=function(token,callback){
   jwt.verify(token, 'secret', (error, verifiedJwt) => {
-    console.log("inside util-->",verifiedJwt);
     if(error){
       callback(error,null);
     }else{
