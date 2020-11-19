@@ -57,7 +57,7 @@ module.exports.getTrendingArticle = (callback) => {
 }
 
 module.exports.getFeed = (email, callback) => {
-    User.find(
+    User.findOne(
         {
             email: email
         },
@@ -74,7 +74,7 @@ module.exports.getFeed = (email, callback) => {
             {
                 path: 'topics follows', select: 'articles -_id',
                 populate: {
-                    path: 'articles', select: 'title content createdOn -_id',
+                    path: 'articles', select: 'title content createdOn _id',
                 },
                 options: { sort: { 'createdOn': -1 } }
             }

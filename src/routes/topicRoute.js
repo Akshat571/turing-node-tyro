@@ -29,9 +29,11 @@ router.get('/follow/:id', function (req, res) {
                         res.status(StatusCodes.BAD_REQUEST)
                     } else {
                         res.status(StatusCodes.OK)
-                        result={"success":{
-                            "message":"Follow successful"
-                        }}
+                        result = {
+                            "success": {
+                                "message": "Follow successful"
+                            }
+                        }
                     }
                     handleResponse(error, result, res);
                 })
