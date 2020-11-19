@@ -19,7 +19,7 @@ const UserSchema = new Schema({
   },
   profilePic: { type: String },
   articles: [{ type: Schema.Types.ObjectId, ref: 'Article' }],
-  topics: [{ type: Schema.Types.ObjectId, ref: 'Topic' }],
+  topics: [{ type: Schema.Types.ObjectId, ref: 'Topic',unique:true }],
   follows: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 });
 

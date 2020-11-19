@@ -8,7 +8,21 @@ module.exports.getSimilarTopics = function (topic, callback) {
 }
 
 module.exports.followTopic = function (topicId, userEmail, callback) {
-    TopicDao.addTopicToPerson(topicId, userEmail, function (error, result) {
+    TopicDao.checkIfTopicAlreadyExists(topicId, userEmail, function (error, result) {
+        if (result == null) {
+
+            callback(error, null);
+        }
+        else {
+            TopicDao.addTopicToPerson(topicId, userEmail, function (error, result) {
+                callback(error, result)
+            })
+        }
+    })
+}
+
+module.exports.unfollowTopic = function (topicId, userEmail, callback) {
+    TopicDao.removeTopicFromPerson(topicId, userEmail, function (error, result) {
         callback(error, result)
     })
 }
