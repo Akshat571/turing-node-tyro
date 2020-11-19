@@ -9,7 +9,6 @@ module.exports.findSimilarTopics = (topic, success) => {
             }, null);
             return;
         } else {
-            console.log("-->",result)
             success(null,result)
 
         }
