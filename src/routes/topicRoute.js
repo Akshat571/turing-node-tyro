@@ -25,12 +25,54 @@ router.get('/follow/:id', function (req, res) {
             } else {
                 var userEmail = verifiedJwt.email;
                 controller.followTopic(topicId, userEmail, function (error, result) {
+                    console.log(result);
+                    if (error) {
+                        res.status(StatusCodes.BAD_REQUEST)
+                    }else if(result==null){
+                        res.status(StatusCodes.BAD_REQUEST)
+                        result={"error":{
+                            "message":"Already following"
+                        }}
+                      
+                    }else {
+                        res.status(StatusCodes.OK)
+                        result={"success":{
+                            "message":"Follow successful"
+                        }}
+                        
+                    }
+                    handleResponse(error, result, res);
+                })
+
+            }
+        })
+
+    } else {
+        return res.status(StatusCodes.NO_CONTENT).json({
+            message: "NO CONTENT"
+        });
+    }
+
+})
+
+router.get('/unfollow/:id', function (req, res) {
+    const topicId = req.params.id;
+    if (topicId != null) {
+        tokenAuthincator(req, res, function (error, verifiedJwt) {
+            if (error) {
+                return res.status(StatusCodes.UNAUTHORIZED).json({
+                    message: "UNAUTHORIZED"
+                })
+            } else {
+                var userEmail = verifiedJwt.email;
+                controller.unfollowTopic(topicId, userEmail, function (error, result) {
+                   
                     if (error) {
                         res.status(StatusCodes.BAD_REQUEST)
                     } else {
                         res.status(StatusCodes.OK)
                         result={"success":{
-                            "message":"Follow successful"
+                            "message":"Unfollow successful"
                         }}
                     }
                     handleResponse(error, result, res);
