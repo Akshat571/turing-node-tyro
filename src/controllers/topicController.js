@@ -6,3 +6,9 @@ module.exports.getSimilarTopics=function(topic,callback){
     })
 
 }
+
+module.exports.followTopic=function(topicId,userEmail,callback){
+    TopicDao.addTopicToPerson(topicId,userEmail,function(error,result){
+        callback(error,result)
+    })
+}
