@@ -34,7 +34,23 @@ module.exports.retriveFeed = function (email, callback) {
     articleDao.getFeed(email, function (error, feedArr) {
         if (error || feedArr.length == 0)
             callback(error, null);
-        else
-            callback(error, feedArr);
+        else {
+            let set = new Set();
+            let articles = [];
+            let uniqueArticles = [];
+            feedArr.topics.map(obj => {
+                articles = [...articles, ...obj.articles];
+            })
+            feedArr.follows.map(obj => {
+                articles = [...articles, ...obj.articles];
+            })
+            for (let i = 0; i < articles.length; i++) {
+                if (!set.has(String(articles[i]._id))) {
+                    set.add(String(articles[i]._id));
+                    uniqueArticles.push(articles[i]);
+                }
+            }
+            callback(error, uniqueArticles);
+        }
     })
 }
