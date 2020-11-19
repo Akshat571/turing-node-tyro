@@ -30,3 +30,12 @@ module.exports.retriveUser = function (email, callback) {
     }
   });
 };
+
+module.exports.retriveUserByCount = function (count, callback) {
+  userDao.getUserByCount(count, function (error, user) {
+    if (error || user.length === 0)
+      callback(error, null);
+    else
+      callback(error, user);
+  })
+} 

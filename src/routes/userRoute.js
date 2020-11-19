@@ -2,7 +2,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const router = express.Router();
 const controller = require("../controllers/userController");
-const { handleResponse } = require("../utils");
+const { handleResponse, tokenAuthincator } = require("../utils");
 const { tokenGenerator } = require("../utils");
 const StatusCodes = require('http-status-codes').StatusCodes;
 
@@ -94,5 +94,26 @@ router.post("/login", (req, res) => {
     });
   }
 });
+
+router.get("/:count?", (req, res) => {
+  tokenAuthincator(req, res, function (error, verifiedJwt) {
+    if (error) {
+      return res.status(StatusCodes.UNAUTHORIZED).json({
+        message: "UNAUTHORIZED"
+      })
+    } else {
+      let count = req.params.count;
+      controller.retriveUserByCount(count, function (userError, userArr) {
+        if (userError) {
+          res.send({
+            userError: userError.name
+          })
+        } else {
+          res.send(userArr);
+        }
+      })
+    }
+  })
+})
 
 module.exports = router;

@@ -17,4 +17,19 @@ module.exports.getUser = function (email, callback) {
   });
 };
 
+module.exports.getUserByCount = function (count, callback) {
+  let projection = { articles: 0, topics: 0, follows: 0, password: 0, __v: 0 };
+  if (count !== undefined) {
+    User.find({}, projection, { limit: Number(count) }).
+      exec(function (error, user) {
+        callback(error, user);
+      })
+  } else {
+    User.find({}, projection).
+      exec(function (error, user) {
+        callback(error, user);
+      })
+  }
+}
+
 
