@@ -6,5 +6,7 @@ app = require("../app");
 module.exports = function (app) {
   app.use("/user", userRoute);
   app.use('/article',articleRoute);
-  app.use('/topic',topicRoute)
+  app.use('/topic',topicRoute);
+  app.use("/users", userRoute);
+  app.use('/topics',topicRoute);
 };

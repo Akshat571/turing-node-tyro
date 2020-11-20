@@ -39,7 +39,6 @@ function getPayload(bearerHeader) {
     const bearer = bearerHeader.split(' ');
     const token = bearer[1];
     return token;
-
   } else {
     return false;
   }
@@ -49,13 +48,13 @@ module.exports.tokenAuthincator = function (req, res, callback) {
   const bearerHeader = req.headers['authorization'];
   if (bearerHeader == null || bearerHeader == undefined) {
     return res.status(StatusCodes.BAD_REQUEST).json({
-      message: "BAD REQUEST"
+      "error": { message: "BAD_REQUEST" }
     })
   }
   var token = getPayload(bearerHeader);
   if (token == null) {
     return res.status(StatusCodes.BAD_REQUEST).json({
-      message: "BAD REQUEST"
+      "error": { message: "BAD_REQUEST" }
     })
   }
 

@@ -11,7 +11,7 @@ router.post('/signup', function (req, res) {
   if (name != null && email != null && password != null) {
     if (password.length < 2) {
       res.status(StatusCodes.BAD_REQUEST).json({
-        message: "BAD REQUEST"
+        "error": { message: "BAD_REQUEST" }
       })
       return;
     } else {
@@ -19,23 +19,23 @@ router.post('/signup', function (req, res) {
         if (error) {
           if (error.name === "ValidationError") {
             res.status(StatusCodes.BAD_REQUEST).json({
-              message: "BAD REQUEST"
+              "error": { message: "BAD_REQUEST" }
             })
             return;
           }
           res.status(StatusCodes.CONFLICT).json({
-            "message": "CONFLICT"
+            "error": { message: "CONFLICT" }
           })
           return;
         } else {
           if (token != null) {
             res.setHeader('Authorization', 'Bearer ' + token);
             res.status(StatusCodes.OK).json({
-              "message": "SUCCESS"
+              "error": { message: "Successful signup" }
             })
           } else {
             res.status(StatusCodes.UNAUTHORIZED).json({
-              "message": "UNAUTHORIZED"
+              "error": { message: "UNAUTHORIZED" }
             });
           }
         }
@@ -45,7 +45,7 @@ router.post('/signup', function (req, res) {
 
   } else {
     res.status(StatusCodes.NO_CONTENT).json({
-      "message": "NO CONTENT"
+      "error": { message: "NO_CONTENT" }
     });
   }
 })
@@ -57,7 +57,7 @@ router.post("/login", (req, res) => {
     controller.retriveUser({ email: email }, function (error, user) {
       if (error || user === null) {
         return res.status(StatusCodes.UNAUTHORIZED).json({
-          "error": "UNAUTHORIZED"
+          "error": { message: "UNAUTHORIZED" }
         });
       } else {
         bcrypt.compare(plainPassword, user.password, (error, result) => {
@@ -75,14 +75,13 @@ router.post("/login", (req, res) => {
               } else {
                 res.setHeader('Authorization', 'Bearer ' + token);
                 res.status(StatusCodes.OK).json({
-                  message: "SUCCESS"
+                  "result": { message: "Successful Login" }
                 })
-
               }
             });
           } else {
             res.status(StatusCodes.UNAUTHORIZED).json({
-              message: "UNAUTHORIZED"
+              "error": { message: "UNAUTHORIZED" }
             });
           }
         });
@@ -90,7 +89,7 @@ router.post("/login", (req, res) => {
     });
   } else {
     return res.status(StatusCodes.NO_CONTENT).json({
-      message: "NO CONTENT"
+      "error": { message: "NO_CONTENT" }
     });
   }
 });
@@ -99,7 +98,7 @@ router.get("/:count?", (req, res) => {
   tokenAuthincator(req, res, function (error, verifiedJwt) {
     if (error) {
       return res.status(StatusCodes.UNAUTHORIZED).json({
-        message: "UNAUTHORIZED"
+        error:{message: "UNAUTHORIZED"}
       })
     } else {
       let count = req.params.count;
@@ -119,44 +118,39 @@ router.get("/:count?", (req, res) => {
 router.get('/follow/:id', function (req, res) {
   const userId = req.params.id;
   if (userId != null) {
-      tokenAuthincator(req, res, function (error, verifiedJwt) {
+    tokenAuthincator(req, res, function (error, verifiedJwt) {
+      if (error) {
+        return res.status(StatusCodes.UNAUTHORIZED).json({
+          "error": { message: "UNAUTHORIZED" }
+        })
+      } else {
+        var userEmail = verifiedJwt.email;
+        controller.followUser(userId, userEmail, function (error, result) {
           if (error) {
-              return res.status(StatusCodes.UNAUTHORIZED).json({
-                  message: "UNAUTHORIZED"
-              })
+            res.status(StatusCodes.BAD_REQUEST)
+          } else if (result == null) {
+            res.status(StatusCodes.BAD_REQUEST)
+            result = {
+              "error": {
+                "message": "Already following"
+              }
+            }
           } else {
-              var userEmail = verifiedJwt.email;
-              controller.followUser(userId, userEmail, function (error, result) {
-                  //console.log(result);
-                  if (error) {
-                      res.status(StatusCodes.BAD_REQUEST)
-                  } else if (result == null) {
-                      res.status(StatusCodes.BAD_REQUEST)
-                      result = {
-                          "error": {
-                              "message": "Already following"
-                          }
-                      }
-
-                  } else {
-                      res.status(StatusCodes.OK)
-                      result = {
-                          "success": {
-                              "message": "Follow successful"
-                          }
-                      }
-
-                  }
-                  handleResponse(error, result, res);
-              })
-
+            res.status(StatusCodes.OK)
+            result = {
+              "result": {
+                "message": "Follow successful"
+              }
+            }
           }
-      })
-
+          handleResponse(error, result, res);
+        })
+      }
+    })
   } else {
-      return res.status(StatusCodes.NO_CONTENT).json({
-          message: "NO CONTENT"
-      });
+    return res.status(StatusCodes.NO_CONTENT).json({
+      "error": { message: "NO_CONTENT" }
+    });
   }
 
 })
@@ -164,37 +158,33 @@ router.get('/follow/:id', function (req, res) {
 router.get('/unfollow/:id', function (req, res) {
   const userId = req.params.id;
   if (userId != null) {
-      tokenAuthincator(req, res, function (error, verifiedJwt) {
+    tokenAuthincator(req, res, function (error, verifiedJwt) {
+      if (error) {
+        return res.status(StatusCodes.UNAUTHORIZED).json({
+          "error": { message: "UNAUTHORIZED" }
+        })
+      } else {
+        var userEmail = verifiedJwt.email;
+        controller.unfollowUser(userId, userEmail, function (error, result) {
           if (error) {
-              return res.status(StatusCodes.UNAUTHORIZED).json({
-                  message: "UNAUTHORIZED"
-              })
+            res.status(StatusCodes.BAD_REQUEST)
           } else {
-              var userEmail = verifiedJwt.email;
-              controller.unfollowUser(userId, userEmail, function (error, result) {
-
-                  if (error) {
-                      res.status(StatusCodes.BAD_REQUEST)
-                  } else {
-                      res.status(StatusCodes.OK)
-                      result = {
-                          "success": {
-                              "message": "Unfollow successful"
-                          }
-                      }
-                  }
-                  handleResponse(error, result, res);
-              })
-
+            res.status(StatusCodes.OK)
+            result = {
+              "result": {
+                "message": "Unfollow successful"
+              }
+            }
           }
-      })
-
-  } else {
-      return res.status(StatusCodes.NO_CONTENT).json({
-          message: "NO CONTENT"
-      });
+          handleResponse(error, result, res);
+        })
+      }
+    })
+} else {
+    return res.status(StatusCodes.NO_CONTENT).json({
+      "error": { message: "NO_CONTENT" }
+    });
   }
-
 })
 
 module.exports = router;

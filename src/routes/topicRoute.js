@@ -20,7 +20,7 @@ router.get('/follow/:id', function (req, res) {
         tokenAuthincator(req, res, function (error, verifiedJwt) {
             if (error) {
                 return res.status(StatusCodes.UNAUTHORIZED).json({
-                    message: "UNAUTHORIZED"
+                    "error": { message: "UNAUTHORIZED" }
                 })
             } else {
                 var userEmail = verifiedJwt.email;
@@ -35,25 +35,22 @@ router.get('/follow/:id', function (req, res) {
                                 "message": "Already following"
                             }
                         }
-
                     } else {
                         res.status(StatusCodes.OK)
                         result = {
-                            "success": {
+                            "result": {
                                 "message": "Follow successful"
                             }
                         }
-
                     }
                     handleResponse(error, result, res);
                 })
 
             }
         })
-
     } else {
         return res.status(StatusCodes.NO_CONTENT).json({
-            message: "NO CONTENT"
+            "error": { message: "NO_CONTENT" }
         });
     }
 
@@ -65,7 +62,7 @@ router.get('/unfollow/:id', function (req, res) {
         tokenAuthincator(req, res, function (error, verifiedJwt) {
             if (error) {
                 return res.status(StatusCodes.UNAUTHORIZED).json({
-                    message: "UNAUTHORIZED"
+                    "error": { message: "UNAUTHORIZED" }
                 })
             } else {
                 var userEmail = verifiedJwt.email;
@@ -76,7 +73,7 @@ router.get('/unfollow/:id', function (req, res) {
                     } else {
                         res.status(StatusCodes.OK)
                         result = {
-                            "success": {
+                            "result": {
                                 "message": "Unfollow successful"
                             }
                         }
@@ -89,7 +86,7 @@ router.get('/unfollow/:id', function (req, res) {
 
     } else {
         return res.status(StatusCodes.NO_CONTENT).json({
-            message: "NO CONTENT"
+            "error": { message: "NO_CONTENT" }
         });
     }
 
@@ -99,17 +96,17 @@ router.get("/:count?", (req, res) => {
     tokenAuthincator(req, res, function (error, verifiedJwt) {
         if (error) {
             return res.status(StatusCodes.UNAUTHORIZED).json({
-                message: "UNAUTHORIZED"
+                "error": { message: "UNAUTHORIZED" }
             })
         } else {
             let count = req.params.count;
-            controller.retriveTopicsByCount(count, function (topicError, topicArr) {
+            controller.retriveTopicsByCount(count, function (topicError, topics) {
                 if (topicError) {
                     res.send({
-                        Error: topicError.name
+                        error: topicError.name
                     })
                 } else {
-                    res.send(topicArr);
+                    res.send(topics);
                 }
             })
         }

@@ -5,7 +5,6 @@ const Schema = mongoose.Schema;
 
 
 const TopicSchema = new Schema({
-    
     topicName: {
         type: String,
         required: true,
