@@ -94,4 +94,25 @@ router.get('/unfollow/:id', function (req, res) {
     }
 
 })
+
+router.get("/:count?", (req, res) => {
+    tokenAuthincator(req, res, function (error, verifiedJwt) {
+        if (error) {
+            return res.status(StatusCodes.UNAUTHORIZED).json({
+                message: "UNAUTHORIZED"
+            })
+        } else {
+            let count = req.params.count;
+            controller.retriveTopicsByCount(count, function (topicError, topicArr) {
+                if (topicError) {
+                    res.send({
+                        Error: topicError.name
+                    })
+                } else {
+                    res.send(topicArr);
+                }
+            })
+        }
+    })
+})
 module.exports = router;

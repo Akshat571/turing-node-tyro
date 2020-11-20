@@ -26,3 +26,12 @@ module.exports.unfollowTopic = function (topicId, userEmail, callback) {
         callback(error, result)
     })
 }
+
+module.exports.retriveTopicsByCount = function (count, callback) {
+    TopicDao.getTopicsByCount(count, function (error, topicArr) {
+        if (error || topicArr.length === 0)
+            callback(error, null);
+        else
+            callback(error, topicArr);
+    })
+}

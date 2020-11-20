@@ -1,4 +1,5 @@
 const Article = require('../models/article');
+const topic = require('../models/topic');
 const Topic = require('../models/topic');
 const User = require('../models/user');
 
@@ -90,10 +91,10 @@ module.exports.checkIfTopicAlreadyExists = (topicId, userEmail, callback) => {
                     flag = 1;
                     break;
                 }
-            } 
+            }
             if (flag == 0) {
                 callback(null, user)
-            } 
+            }
             else {
                 callback(error, null)
             }
@@ -108,5 +109,16 @@ module.exports.checkIfTopicAlreadyExists = (topicId, userEmail, callback) => {
 
 }
 
-
-
+module.exports.getTopicsByCount = function (count, callback) {
+    if (count !== undefined) {
+        Topic.find({}, { articles: 0, __v: 0 }, { limit: Number(count) }).
+            exec(function (error, topicArr) {
+                callback(error, topicArr);
+            })
+    } else {
+        Topic.find({}, { articles: 0, __v: 0 }).
+            exec(function (error, topicArr) {
+                callback(error, topicArr);
+            })
+    }
+}
