@@ -94,26 +94,7 @@ router.post("/login", (req, res) => {
   }
 });
 
-router.get("/:count?", (req, res) => {
-  tokenAuthincator(req, res, function (error, verifiedJwt) {
-    if (error) {
-      return res.status(StatusCodes.UNAUTHORIZED).json({
-        error:{message: "UNAUTHORIZED"}
-      })
-    } else {
-      let count = req.params.count;
-      controller.retriveUserByCount(count, function (userError, userArr) {
-        if (userError) {
-          res.send({
-            userError: userError.name
-          })
-        } else {
-          res.send(userArr);
-        }
-      })
-    }
-  })
-})
+
 
 router.get('/follow/:id', function (req, res) {
   const userId = req.params.id;

@@ -21,7 +21,7 @@ router.post('/createPost', function (req, res) {
                             "error": { message: "BADREQUEST " }
                         })
                     } else {
-                        return res.status(StatusCodes.OK).json({
+                        return res.status(StatusCodes.CREATED).json({
                             result: {
                                 "message": "post published"
                             }
