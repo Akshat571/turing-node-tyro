@@ -10,7 +10,6 @@ module.exports.getSimilarTopics = function (topic, callback) {
 module.exports.followTopic = function (topicId, userEmail, callback) {
     TopicDao.checkIfTopicAlreadyExists(topicId, userEmail, function (error, result) {
         if (result == null) {
-
             callback(error, null);
         }
         else {

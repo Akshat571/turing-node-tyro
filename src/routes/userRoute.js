@@ -119,44 +119,44 @@ router.get("/:count?", (req, res) => {
 router.get('/follow/:id', function (req, res) {
   const userId = req.params.id;
   if (userId != null) {
-      tokenAuthincator(req, res, function (error, verifiedJwt) {
+    tokenAuthincator(req, res, function (error, verifiedJwt) {
+      if (error) {
+        return res.status(StatusCodes.UNAUTHORIZED).json({
+          message: "UNAUTHORIZED"
+        })
+      } else {
+        var userEmail = verifiedJwt.email;
+        controller.followUser(userId, userEmail, function (error, result) {
+          //console.log(result);
           if (error) {
-              return res.status(StatusCodes.UNAUTHORIZED).json({
-                  message: "UNAUTHORIZED"
-              })
+            res.status(StatusCodes.BAD_REQUEST)
+          } else if (result == null) {
+            res.status(StatusCodes.BAD_REQUEST)
+            result = {
+              "error": {
+                "message": "Already following"
+              }
+            }
+
           } else {
-              var userEmail = verifiedJwt.email;
-              controller.followUser(userId, userEmail, function (error, result) {
-                  //console.log(result);
-                  if (error) {
-                      res.status(StatusCodes.BAD_REQUEST)
-                  } else if (result == null) {
-                      res.status(StatusCodes.BAD_REQUEST)
-                      result = {
-                          "error": {
-                              "message": "Already following"
-                          }
-                      }
-
-                  } else {
-                      res.status(StatusCodes.OK)
-                      result = {
-                          "success": {
-                              "message": "Follow successful"
-                          }
-                      }
-
-                  }
-                  handleResponse(error, result, res);
-              })
+            res.status(StatusCodes.OK)
+            result = {
+              "success": {
+                "message": "Follow successful"
+              }
+            }
 
           }
-      })
+          handleResponse(error, result, res);
+        })
+
+      }
+    })
 
   } else {
-      return res.status(StatusCodes.NO_CONTENT).json({
-          message: "NO CONTENT"
-      });
+    return res.status(StatusCodes.NO_CONTENT).json({
+      message: "NO CONTENT"
+    });
   }
 
 })
@@ -164,35 +164,35 @@ router.get('/follow/:id', function (req, res) {
 router.get('/unfollow/:id', function (req, res) {
   const userId = req.params.id;
   if (userId != null) {
-      tokenAuthincator(req, res, function (error, verifiedJwt) {
+    tokenAuthincator(req, res, function (error, verifiedJwt) {
+      if (error) {
+        return res.status(StatusCodes.UNAUTHORIZED).json({
+          message: "UNAUTHORIZED"
+        })
+      } else {
+        var userEmail = verifiedJwt.email;
+        controller.unfollowUser(userId, userEmail, function (error, result) {
+
           if (error) {
-              return res.status(StatusCodes.UNAUTHORIZED).json({
-                  message: "UNAUTHORIZED"
-              })
+            res.status(StatusCodes.BAD_REQUEST)
           } else {
-              var userEmail = verifiedJwt.email;
-              controller.unfollowUser(userId, userEmail, function (error, result) {
-
-                  if (error) {
-                      res.status(StatusCodes.BAD_REQUEST)
-                  } else {
-                      res.status(StatusCodes.OK)
-                      result = {
-                          "success": {
-                              "message": "Unfollow successful"
-                          }
-                      }
-                  }
-                  handleResponse(error, result, res);
-              })
-
+            res.status(StatusCodes.OK)
+            result = {
+              "success": {
+                "message": "Unfollow successful"
+              }
+            }
           }
-      })
+          handleResponse(error, result, res);
+        })
+
+      }
+    })
 
   } else {
-      return res.status(StatusCodes.NO_CONTENT).json({
-          message: "NO CONTENT"
-      });
+    return res.status(StatusCodes.NO_CONTENT).json({
+      message: "NO CONTENT"
+    });
   }
 
 })

@@ -5,20 +5,17 @@ module.exports.publishPost = function (title, topics, content, author, callback)
     userDao.getUser(author, function (error, user) {
         if (error) {
             callback(error, null);
-
         } else {
             const authorId = user._id;
             articleDao.createArticle(title, topics, content, authorId, function (error, newArticle) {
                 if (error) {
                     callback(error, null);
-
                 } else {
                     callback(error, newArticle);
                 }
             })
         }
     })
-
 }
 
 module.exports.retriveTrendingArticles = (callback) => {
@@ -35,7 +32,7 @@ module.exports.retriveFeed = function (email, callback) {
         if (error || feedArr.length == 0)
             callback(error, null);
         else {
-            let set = new Set();
+            let ObjectIdset = new Set();
             let articles = [];
             let uniqueArticles = [];
             feedArr.topics.map(obj => {
@@ -45,8 +42,8 @@ module.exports.retriveFeed = function (email, callback) {
                 articles = [...articles, ...obj.articles];
             })
             for (let i = 0; i < articles.length; i++) {
-                if (!set.has(String(articles[i]._id))) {
-                    set.add(String(articles[i]._id));
+                if (!ObjectIdset.has(String(articles[i]._id))) {
+                    ObjectIdset.add(String(articles[i]._id));
                     uniqueArticles.push(articles[i]);
                 }
             }
