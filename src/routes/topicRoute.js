@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const jwt = require("jsonwebtoken");
 const controller = require("../controllers/topicController");
 const { handleResponse, getPayload, verifyToken } = require("../utils");
 const StatusCodes = require('http-status-codes').StatusCodes;
@@ -45,7 +44,6 @@ router.get('/follow/:id', function (req, res) {
                     }
                     handleResponse(error, result, res);
                 })
-
             }
         })
     } else {
@@ -67,7 +65,6 @@ router.get('/unfollow/:id', function (req, res) {
             } else {
                 var userEmail = verifiedJwt.email;
                 controller.unfollowTopic(topicId, userEmail, function (error, result) {
-
                     if (error) {
                         res.status(StatusCodes.BAD_REQUEST)
                     } else {
@@ -80,16 +77,13 @@ router.get('/unfollow/:id', function (req, res) {
                     }
                     handleResponse(error, result, res);
                 })
-
             }
         })
-
     } else {
         return res.status(StatusCodes.NO_CONTENT).json({
             "error": { message: "NO_CONTENT" }
         });
     }
-
 })
 
 

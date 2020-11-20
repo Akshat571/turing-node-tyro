@@ -1,15 +1,9 @@
 var mongoose = require("mongoose");
 module.exports.start = function (success) {
   // Build the connection string
-<<<<<<< HEAD
-  // var dbURI = "mongodb://localhost/tyroDB";
-
-  var dbURI = "mongodb+srv://akshat:Qwerty@123@tyrocluster.e1fys.mongodb.net/tyroDB";
-=======
   //var dbURI = "mongodb://localhost/tyroDB";
 
-   var dbURI = "mongodb+srv://akshat:Qwerty@123@tyrocluster.e1fys.mongodb.net/tyroDB";
->>>>>>> ad1c19fa185e5695d2917307395599cec666ef75
+  var dbURI = "mongodb+srv://akshat:Qwerty@123@tyrocluster.e1fys.mongodb.net/tyroDB";
   // Create the database connection
   mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
 

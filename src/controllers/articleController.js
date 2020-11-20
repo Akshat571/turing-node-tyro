@@ -38,7 +38,7 @@ module.exports.retriveFeed = function (email, callback) {
             feedArr.topics.map(obj => {
                 articles = [...articles, ...obj.articles];
             })
-            feedArr.follows.map(obj => {
+            feedArr.peopleFollowing.map(obj => {
                 articles = [...articles, ...obj.articles];
             })
             for (let i = 0; i < articles.length; i++) {

@@ -58,10 +58,8 @@ module.exports.followAnUser = (userId, userEmail, success) => {
                     return;
                 }
             });
-
         }
     })
-
 }
 
 module.exports.unfollowAnUser = (userId, userEmail, success) => {
@@ -94,10 +92,8 @@ module.exports.unfollowAnUser = (userId, userEmail, success) => {
                     return;
                 }
             });
-
         }
     })
-
 }
 
 module.exports.checkIfUserAlreadyIsFollowing = (userId, userEmail, callback) => {
@@ -125,7 +121,6 @@ module.exports.checkIfUserAlreadyIsFollowing = (userId, userEmail, callback) => 
             return;
         }
     });
-
 }
 
 

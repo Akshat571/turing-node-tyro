@@ -57,7 +57,6 @@ module.exports.tokenAuthincator = function (req, res, callback) {
       "error": { message: "BAD_REQUEST" }
     })
   }
-
   verifyToken(token, function (error, verifiedJwt) {
     callback(error, verifiedJwt);
   })

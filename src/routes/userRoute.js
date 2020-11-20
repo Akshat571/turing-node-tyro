@@ -102,19 +102,11 @@ router.get('/follow/:id', function (req, res) {
     tokenAuthincator(req, res, function (error, verifiedJwt) {
       if (error) {
         return res.status(StatusCodes.UNAUTHORIZED).json({
-<<<<<<< HEAD
-          message: "UNAUTHORIZED"
-=======
           "error": { message: "UNAUTHORIZED" }
->>>>>>> ad1c19fa185e5695d2917307395599cec666ef75
         })
       } else {
         var userEmail = verifiedJwt.email;
         controller.followUser(userId, userEmail, function (error, result) {
-<<<<<<< HEAD
-          //console.log(result);
-=======
->>>>>>> ad1c19fa185e5695d2917307395599cec666ef75
           if (error) {
             res.status(StatusCodes.BAD_REQUEST)
           } else if (result == null) {
@@ -124,27 +116,6 @@ router.get('/follow/:id', function (req, res) {
                 "message": "Already following"
               }
             }
-<<<<<<< HEAD
-
-          } else {
-            res.status(StatusCodes.OK)
-            result = {
-              "success": {
-                "message": "Follow successful"
-              }
-            }
-
-          }
-          handleResponse(error, result, res);
-        })
-
-      }
-    })
-
-  } else {
-    return res.status(StatusCodes.NO_CONTENT).json({
-      message: "NO CONTENT"
-=======
           } else {
             res.status(StatusCodes.OK)
             result = {
@@ -160,7 +131,6 @@ router.get('/follow/:id', function (req, res) {
   } else {
     return res.status(StatusCodes.NO_CONTENT).json({
       "error": { message: "NO_CONTENT" }
->>>>>>> ad1c19fa185e5695d2917307395599cec666ef75
     });
   }
 
@@ -172,50 +142,28 @@ router.get('/unfollow/:id', function (req, res) {
     tokenAuthincator(req, res, function (error, verifiedJwt) {
       if (error) {
         return res.status(StatusCodes.UNAUTHORIZED).json({
-<<<<<<< HEAD
-          message: "UNAUTHORIZED"
-=======
           "error": { message: "UNAUTHORIZED" }
->>>>>>> ad1c19fa185e5695d2917307395599cec666ef75
         })
       } else {
         var userEmail = verifiedJwt.email;
         controller.unfollowUser(userId, userEmail, function (error, result) {
-<<<<<<< HEAD
-
-=======
->>>>>>> ad1c19fa185e5695d2917307395599cec666ef75
           if (error) {
             res.status(StatusCodes.BAD_REQUEST)
           } else {
             res.status(StatusCodes.OK)
             result = {
-<<<<<<< HEAD
-              "success": {
-=======
               "result": {
->>>>>>> ad1c19fa185e5695d2917307395599cec666ef75
                 "message": "Unfollow successful"
               }
             }
           }
           handleResponse(error, result, res);
         })
-<<<<<<< HEAD
-
       }
     })
-
   } else {
     return res.status(StatusCodes.NO_CONTENT).json({
-      message: "NO CONTENT"
-=======
-      }
-    })
-} else {
-    return res.status(StatusCodes.NO_CONTENT).json({
       "error": { message: "NO_CONTENT" }
->>>>>>> ad1c19fa185e5695d2917307395599cec666ef75
     });
   }
 })

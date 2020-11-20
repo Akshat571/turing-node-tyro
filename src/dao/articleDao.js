@@ -1,7 +1,6 @@
 const Article = require('../models/article');
 const User = require('../models/user');
 const Topic = require('../models/topic');
-const { model } = require('../models/topic');
 
 
 module.exports.createArticle = function (title, topics, content, authorId, success) {
@@ -36,7 +35,6 @@ module.exports.createArticle = function (title, topics, content, authorId, succe
 };
 
 module.exports.getTrendingArticle = (callback) => {
-
     const options = { sort: { count: -1 }, limit: 4 };
     Article.find({}, { topics: 0, __v: 0, content: 0 }, options).
         populate('author', '_id name email').
@@ -64,7 +62,7 @@ module.exports.getFeed = (email, callback) => {
         },
         {}).
         populate({
-            path: 'topics follows', select: 'articles -_id',
+            path: 'topics peopleFollowing', select: 'articles -_id',
             populate: {
                 path: 'articles', select: 'title content createdOn _id',
             },

@@ -1,5 +1,3 @@
-const Article = require('../models/article');
-const topic = require('../models/topic');
 const Topic = require('../models/topic');
 const User = require('../models/user');
 
@@ -13,7 +11,6 @@ module.exports.findSimilarTopics = (topic, success) => {
             return;
         } else {
             success(null, result)
-
         }
     })
 }
@@ -98,7 +95,6 @@ module.exports.checkIfTopicAlreadyExists = (topicId, userEmail, callback) => {
             else {
                 callback(error, null)
             }
-
         } else {
             callback({
                 "result": {
