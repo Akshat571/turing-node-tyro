@@ -1,43 +1,26 @@
-const User = require("../models/user");
+const Topic = require('../models/topic');
+const User = require('../models/user');
 
-module.exports.createUser = function (name, email, password, success) {
-    var user = new User({ name, email, password });
-    user.save(function (error, newUser) {
-        success(error, newUser);
-    });
-};
 
-module.exports.getUser = function (email, callback) {
-    User.findOne({ email: email }, function (err, docs) {
-        if (err) {
-            callback(err, null);
+module.exports.findSimilarTopics = (topic, success) => {
+    Topic.find({ "topicName": { $regex: '^' + topic, $options: "i" } }, { articles: 0, __v: 0, _v: 0 }).exec(function (error, result) {
+        if (error || result.length < 1) {
+            success({
+                message: 'There is no topic with such name'
+            }, null);
+            return;
         } else {
-            callback(err, docs);
+            success(null, result)
         }
-    });
-};
-
-module.exports.getUserByCount = function (count, callback) {
-    let projection = { articles: 0, topics: 0, peopleFollowing: 0, password: 0, __v: 0 };
-    if (count !== undefined) {
-        User.find({}, projection, { limit: Number(count) }).
-            exec(function (error, user) {
-                callback(error, user);
-            })
-    } else {
-        User.find({}, projection).
-            exec(function (error, user) {
-                callback(error, user);
-            })
-    }
+    })
 }
 
-module.exports.followAnUser = (userId, userEmail, success) => {
-    User.findOne({ _id: userId }, function (error, existingUser) {
+module.exports.addTopicToPerson = (topicId, userEmail, success) => {
+    Topic.findOne({ _id: topicId }, function (error, topic) {
         if (error) {
             success({
                 "result": {
-                    message: "Couldnt find user"
+                    message: "Couldnt find topic"
                 }
             }, null, null)
             return;
@@ -45,13 +28,13 @@ module.exports.followAnUser = (userId, userEmail, success) => {
         else {
             User.findOne({ email: userEmail }, function (error, user) {
                 if (user) {
-                    user.peopleFollowing.push(userId);
+                    user.topics.push(topicId);
                     user.save(function (error, user) {
                         success(error, user);
                     })
                 } else {
                     success({
-                        "result": {
+                        result: {
                             message: "Couldnt find user"
                         }
                     }, null, null)
@@ -62,12 +45,12 @@ module.exports.followAnUser = (userId, userEmail, success) => {
     })
 }
 
-module.exports.unfollowAnUser = (userId, userEmail, success) => {
-    User.findOne({ _id: userId }, function (error, exisitingUser) {
+module.exports.removeTopicFromPerson = (topicId, userEmail, success) => {
+    Topic.findOne({ _id: topicId }, function (error, topic) {
         if (error) {
             success({
                 "result": {
-                    message: "Couldnt find user"
+                    message: "Couldnt find topic"
                 }
             }, null, null)
             return;
@@ -75,9 +58,9 @@ module.exports.unfollowAnUser = (userId, userEmail, success) => {
         else {
             User.findOne({ email: userEmail }, function (error, user) {
                 if (user) {
-                    for (var i in user.peopleFollowing) {
-                        if (user.peopleFollowing[i] == userId) {
-                            user.peopleFollowing.splice(i, 1);
+                    for (var i in user.topics) {
+                        if (user.topics[i] == topicId) {
+                            user.topics.splice(i, 1);
                         }
                     }
                     user.save(function (error, user) {
@@ -96,12 +79,12 @@ module.exports.unfollowAnUser = (userId, userEmail, success) => {
     })
 }
 
-module.exports.checkIfUserAlreadyIsFollowing = (userId, userEmail, callback) => {
+module.exports.checkIfTopicAlreadyExists = (topicId, userEmail, callback) => {
     User.findOne({ email: userEmail }, function (error, user) {
         if (user) {
             var flag = 0
-            for (var i in user.peopleFollowing) {
-                if (user.peopleFollowing[i] == userId) {
+            for (var i in user.topics) {
+                if (user.topics[i] == topicId) {
                     flag = 1;
                     break;
                 }
@@ -123,4 +106,16 @@ module.exports.checkIfUserAlreadyIsFollowing = (userId, userEmail, callback) => 
     });
 }
 
-
+module.exports.getTopicsByCount = function (count, callback) {
+    if (count !== undefined) {
+        Topic.find({}, { articles: 0, __v: 0 }, { limit: Number(count) }).
+            exec(function (error, topicArr) {
+                callback(error, topicArr);
+            })
+    } else {
+        Topic.find({}, { articles: 0, __v: 0 }).
+            exec(function (error, topicArr) {
+                callback(error, topicArr);
+            })
+    }
+}
