@@ -43,7 +43,10 @@ module.exports.retriveUserByCount = function (count, callback) {
 module.exports.followUser = function (userId, userEmail, callback) {
   userDao.checkIfUserAlreadyIsFollowing(userId, userEmail, function (error, result) {
     if (result == null) {
+<<<<<<< HEAD
 
+=======
+>>>>>>> ad1c19fa185e5695d2917307395599cec666ef75
       callback(error, null);
     }
     else {

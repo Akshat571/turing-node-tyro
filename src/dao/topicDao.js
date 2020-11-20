@@ -18,13 +18,13 @@ module.exports.findSimilarTopics = (topic, success) => {
     })
 }
 
-
-
 module.exports.addTopicToPerson = (topicId, userEmail, success) => {
     Topic.findOne({ _id: topicId }, function (error, topic) {
         if (error) {
             success({
-                message: "Couldnt find topic"
+                "result": {
+                    message: "Couldnt find topic"
+                }
             }, null, null)
             return;
         }
@@ -37,22 +37,24 @@ module.exports.addTopicToPerson = (topicId, userEmail, success) => {
                     })
                 } else {
                     success({
-                        message: "Couldnt find user"
+                        result: {
+                            message: "Couldnt find user"
+                        }
                     }, null, null)
                     return;
                 }
             });
-
         }
     })
-
 }
 
 module.exports.removeTopicFromPerson = (topicId, userEmail, success) => {
     Topic.findOne({ _id: topicId }, function (error, topic) {
         if (error) {
             success({
-                message: "Couldnt find topic"
+                "result": {
+                    message: "Couldnt find topic"
+                }
             }, null, null)
             return;
         }
@@ -64,22 +66,20 @@ module.exports.removeTopicFromPerson = (topicId, userEmail, success) => {
                             user.topics.splice(i, 1);
                         }
                     }
-                    console.log(user.topics);
-
                     user.save(function (error, user) {
                         success(error, user);
                     })
                 } else {
                     success({
-                        message: "Couldnt find user"
+                        "result": {
+                            message: "Couldnt find topic"
+                        }
                     }, null, null)
                     return;
                 }
             });
-
         }
     })
-
 }
 
 module.exports.checkIfTopicAlreadyExists = (topicId, userEmail, callback) => {
@@ -101,12 +101,13 @@ module.exports.checkIfTopicAlreadyExists = (topicId, userEmail, callback) => {
 
         } else {
             callback({
-                message: "Couldnt find user"
+                "result": {
+                    message: "Couldnt find topic"
+                }
             }, null, null)
             return;
         }
     });
-
 }
 
 module.exports.getTopicsByCount = function (count, callback) {

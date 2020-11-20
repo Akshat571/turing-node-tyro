@@ -20,7 +20,7 @@ const UserSchema = new Schema({
   profilePic: { type: String },
   articles: [{ type: Schema.Types.ObjectId, ref: 'Article' }],
   topics: [{ type: Schema.Types.ObjectId, ref: 'Topic' }],
-  follows: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  peopleFollowing: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 });
 
 module.exports = mongoose.model("User", UserSchema);

@@ -11,17 +11,17 @@ router.post('/createPost', function (req, res) {
         tokenAuthincator(req, res, function (error, verifiedJwt) {
             if (error) {
                 return res.status(StatusCodes.UNAUTHORIZED).json({
-                    message: "UNAUTHORIZED"
+                    "error": { message: "UNAUTHORIZED" }
                 })
             } else {
                 var author = verifiedJwt.email;
                 controller.publishPost(title, topics, content, author, function (error, article) {
                     if (error) {
                         return res.status(StatusCodes.BAD_REQUEST).json({
-                            "message": error.name
+                            "error": { message: "BADREQUEST " }
                         })
                     } else {
-                        return res.status(StatusCodes.OK).json({
+                        return res.status(StatusCodes.CREATED).json({
                             result: {
                                 "message": "post published"
                             }
@@ -32,7 +32,7 @@ router.post('/createPost', function (req, res) {
         })
     } else {
         res.status(StatusCodes.NO_CONTENT).json({
-            "message": "NO CONTENT"
+            "error": { message: "NO_CONTENT" }
         });
     }
 })
@@ -41,7 +41,7 @@ router.get("/trending", function (req, res) {
     tokenAuthincator(req, res, function (error, verifiedJwt) {
         if (error) {
             return res.status(StatusCodes.UNAUTHORIZED).json({
-                message: "UNAUTHORIZED"
+                "error": { message: "UNAUTHORIZED" }
             })
         } else {
             controller.retriveTrendingArticles(function (error, articles) {
@@ -62,7 +62,7 @@ router.get("/feed", function (req, res) {
     tokenAuthincator(req, res, function (error, verifiedJwt) {
         if (error) {
             return res.status(StatusCodes.UNAUTHORIZED).json({
-                message: "UNAUTHORIZED"
+                "error": { message: "UNAUTHORIZED" }
             })
         } else {
             controller.retriveFeed(verifiedJwt.email, function (error, feedArr) {

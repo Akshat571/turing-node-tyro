@@ -11,7 +11,7 @@ router.post('/signup', function (req, res) {
   if (name != null && email != null && password != null) {
     if (password.length < 2) {
       res.status(StatusCodes.BAD_REQUEST).json({
-        message: "BAD REQUEST"
+        "error": { message: "BAD_REQUEST" }
       })
       return;
     } else {
@@ -19,23 +19,23 @@ router.post('/signup', function (req, res) {
         if (error) {
           if (error.name === "ValidationError") {
             res.status(StatusCodes.BAD_REQUEST).json({
-              message: "BAD REQUEST"
+              "error": { message: "BAD_REQUEST" }
             })
             return;
           }
           res.status(StatusCodes.CONFLICT).json({
-            "message": "CONFLICT"
+            "error": { message: "CONFLICT" }
           })
           return;
         } else {
           if (token != null) {
             res.setHeader('Authorization', 'Bearer ' + token);
             res.status(StatusCodes.OK).json({
-              "message": "SUCCESS"
+              "error": { message: "Successful signup" }
             })
           } else {
             res.status(StatusCodes.UNAUTHORIZED).json({
-              "message": "UNAUTHORIZED"
+              "error": { message: "UNAUTHORIZED" }
             });
           }
         }
@@ -45,7 +45,7 @@ router.post('/signup', function (req, res) {
 
   } else {
     res.status(StatusCodes.NO_CONTENT).json({
-      "message": "NO CONTENT"
+      "error": { message: "NO_CONTENT" }
     });
   }
 })
@@ -57,7 +57,7 @@ router.post("/login", (req, res) => {
     controller.retriveUser({ email: email }, function (error, user) {
       if (error || user === null) {
         return res.status(StatusCodes.UNAUTHORIZED).json({
-          "error": "UNAUTHORIZED"
+          "error": { message: "UNAUTHORIZED" }
         });
       } else {
         bcrypt.compare(plainPassword, user.password, (error, result) => {
@@ -75,14 +75,13 @@ router.post("/login", (req, res) => {
               } else {
                 res.setHeader('Authorization', 'Bearer ' + token);
                 res.status(StatusCodes.OK).json({
-                  message: "SUCCESS"
+                  "result": { message: "Successful Login" }
                 })
-
               }
             });
           } else {
             res.status(StatusCodes.UNAUTHORIZED).json({
-              message: "UNAUTHORIZED"
+              "error": { message: "UNAUTHORIZED" }
             });
           }
         });
@@ -90,31 +89,12 @@ router.post("/login", (req, res) => {
     });
   } else {
     return res.status(StatusCodes.NO_CONTENT).json({
-      message: "NO CONTENT"
+      "error": { message: "NO_CONTENT" }
     });
   }
 });
 
-router.get("/:count?", (req, res) => {
-  tokenAuthincator(req, res, function (error, verifiedJwt) {
-    if (error) {
-      return res.status(StatusCodes.UNAUTHORIZED).json({
-        message: "UNAUTHORIZED"
-      })
-    } else {
-      let count = req.params.count;
-      controller.retriveUserByCount(count, function (userError, userArr) {
-        if (userError) {
-          res.send({
-            userError: userError.name
-          })
-        } else {
-          res.send(userArr);
-        }
-      })
-    }
-  })
-})
+
 
 router.get('/follow/:id', function (req, res) {
   const userId = req.params.id;
@@ -122,12 +102,19 @@ router.get('/follow/:id', function (req, res) {
     tokenAuthincator(req, res, function (error, verifiedJwt) {
       if (error) {
         return res.status(StatusCodes.UNAUTHORIZED).json({
+<<<<<<< HEAD
           message: "UNAUTHORIZED"
+=======
+          "error": { message: "UNAUTHORIZED" }
+>>>>>>> ad1c19fa185e5695d2917307395599cec666ef75
         })
       } else {
         var userEmail = verifiedJwt.email;
         controller.followUser(userId, userEmail, function (error, result) {
+<<<<<<< HEAD
           //console.log(result);
+=======
+>>>>>>> ad1c19fa185e5695d2917307395599cec666ef75
           if (error) {
             res.status(StatusCodes.BAD_REQUEST)
           } else if (result == null) {
@@ -137,6 +124,7 @@ router.get('/follow/:id', function (req, res) {
                 "message": "Already following"
               }
             }
+<<<<<<< HEAD
 
           } else {
             res.status(StatusCodes.OK)
@@ -156,6 +144,23 @@ router.get('/follow/:id', function (req, res) {
   } else {
     return res.status(StatusCodes.NO_CONTENT).json({
       message: "NO CONTENT"
+=======
+          } else {
+            res.status(StatusCodes.OK)
+            result = {
+              "result": {
+                "message": "Follow successful"
+              }
+            }
+          }
+          handleResponse(error, result, res);
+        })
+      }
+    })
+  } else {
+    return res.status(StatusCodes.NO_CONTENT).json({
+      "error": { message: "NO_CONTENT" }
+>>>>>>> ad1c19fa185e5695d2917307395599cec666ef75
     });
   }
 
@@ -167,24 +172,36 @@ router.get('/unfollow/:id', function (req, res) {
     tokenAuthincator(req, res, function (error, verifiedJwt) {
       if (error) {
         return res.status(StatusCodes.UNAUTHORIZED).json({
+<<<<<<< HEAD
           message: "UNAUTHORIZED"
+=======
+          "error": { message: "UNAUTHORIZED" }
+>>>>>>> ad1c19fa185e5695d2917307395599cec666ef75
         })
       } else {
         var userEmail = verifiedJwt.email;
         controller.unfollowUser(userId, userEmail, function (error, result) {
+<<<<<<< HEAD
 
+=======
+>>>>>>> ad1c19fa185e5695d2917307395599cec666ef75
           if (error) {
             res.status(StatusCodes.BAD_REQUEST)
           } else {
             res.status(StatusCodes.OK)
             result = {
+<<<<<<< HEAD
               "success": {
+=======
+              "result": {
+>>>>>>> ad1c19fa185e5695d2917307395599cec666ef75
                 "message": "Unfollow successful"
               }
             }
           }
           handleResponse(error, result, res);
         })
+<<<<<<< HEAD
 
       }
     })
@@ -192,9 +209,15 @@ router.get('/unfollow/:id', function (req, res) {
   } else {
     return res.status(StatusCodes.NO_CONTENT).json({
       message: "NO CONTENT"
+=======
+      }
+    })
+} else {
+    return res.status(StatusCodes.NO_CONTENT).json({
+      "error": { message: "NO_CONTENT" }
+>>>>>>> ad1c19fa185e5695d2917307395599cec666ef75
     });
   }
-
 })
 
 module.exports = router;

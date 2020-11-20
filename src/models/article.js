@@ -4,7 +4,6 @@ const Topic = require("./topic");
 const Schema = mongoose.Schema;
 
 const ArticleSchema = new Schema({
-   // _id: Schema.Types.ObjectId,
     author: { type: Schema.Types.ObjectId, ref: 'User' },
     title: {
         type: String,
@@ -15,7 +14,7 @@ const ArticleSchema = new Schema({
         required: true,
     },
     topics: [{ type: Schema.Types.ObjectId, ref: 'Topic' }],
-    count: { type: Number },
+    views: { type: Number },
     createdOn: { type: Date },
 });
 

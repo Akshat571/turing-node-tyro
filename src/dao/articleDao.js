@@ -7,8 +7,7 @@ const { model } = require('../models/topic');
 module.exports.createArticle = function (title, topics, content, authorId, success) {
     const date = new Date();
     var newArticle = new Article({
-        author: authorId, title: title, content: content, topics: topics, count: 4, createdOn: date
-
+        author: authorId, title: title, content: content, topics: topics, view: 4, createdOn: date
     });
     newArticle.save(function (error, publishedPost) {
         User.findOne({ _id: authorId }, function (error, user) {
@@ -26,20 +25,14 @@ module.exports.createArticle = function (title, topics, content, authorId, succe
         });
         Topic.find({ _id: { $in: topics } }, function (error, result) {
             if (result) {
-                console.log("in if " + result.length);
                 for (var i = 0; i < result.length; i++) {
                     console.log(result[i]);
                     result[i].articles.push(publishedPost);
                     result[i].save();
-
                 }
             }
-
         })
-
     })
-
-
 };
 
 module.exports.getTrendingArticle = (callback) => {
@@ -47,11 +40,11 @@ module.exports.getTrendingArticle = (callback) => {
     const options = { sort: { count: -1 }, limit: 4 };
     Article.find({}, { topics: 0, __v: 0, content: 0 }, options).
         populate('author', '_id name email').
-        exec(function (error, articleArr) {
+        exec(function (error, articles) {
             if (error) {
                 callback(error, null);
             } else {
-                callback(error, articleArr);
+                callback(error, articles);
             }
         })
 }
@@ -70,20 +63,18 @@ module.exports.getFeed = (email, callback) => {
             articles: 0
         },
         {}).
-        populate(
-            {
-                path: 'topics follows', select: 'articles -_id',
-                populate: {
-                    path: 'articles', select: 'title content createdOn _id',
-                },
-                options: { sort: { 'createdOn': -1 } }
-            }
-        ).
-        exec(function (error, feedArr) {
+        populate({
+            path: 'topics follows', select: 'articles -_id',
+            populate: {
+                path: 'articles', select: 'title content createdOn _id',
+            },
+            options: { sort: { 'createdOn': -1 } }
+        }).
+        exec(function (error, feed) {
             if (error)
                 callback(error, null);
             else
-                callback(error, feedArr);
+                callback(error, feed);
         })
 }
 
