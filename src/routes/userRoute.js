@@ -32,7 +32,7 @@ router.post('/signup', function (req, res) {
             res.setHeader("Access-Control-Expose-Headers", "Authorization");
             res.setHeader('Authorization', 'Bearer ' + token);
             res.status(StatusCodes.OK).json({
-              "error": { message: "Successful signup" }
+              "result": { message: "Successful signup" }
             })
           } else {
             res.status(StatusCodes.UNAUTHORIZED).json({
