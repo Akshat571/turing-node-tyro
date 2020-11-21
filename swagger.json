@@ -11,7 +11,7 @@
             ]
         }
     },
-    "host": "https://tyroapis.herokuapp.com",
+    "host": "tyroapis.herokuapp.com",
     "basePath": "/",
     "tags": [
         {
