@@ -29,6 +29,7 @@ router.post('/signup', function (req, res) {
           return;
         } else {
           if (token != null) {
+            res.setHeader("Access-Control-Expose-Headers", "Authorization");
             res.setHeader('Authorization', 'Bearer ' + token);
             res.status(StatusCodes.OK).json({
               "error": { message: "Successful signup" }
@@ -73,6 +74,7 @@ router.post("/login", (req, res) => {
                   error: error
                 })
               } else {
+                res.setHeader("Access-Control-Expose-Headers", "Authorization");
                 res.setHeader('Authorization', 'Bearer ' + token);
                 res.status(StatusCodes.OK).json({
                   "result": { message: "Successful Login" }
