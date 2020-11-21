@@ -5,7 +5,7 @@ const startRoutesConfig = require('./config/routes');
 
 const app = express();
 
-db.start(function() {
+db.start(function () {
     startExpressConfig(app);
     startRoutesConfig(app);
 });

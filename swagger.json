@@ -1,0 +1,650 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "REST API endpoints for project Tyro.",
+        "version": "1.0.0",
+        "title": "Tyro APIs",
+        "termsOfService": "",
+        "contact": {
+            "email": [
+                "akshatdivya@infrrd.ai, akshathajanardhan@infrrd.ai"
+            ]
+        }
+    },
+    "host": "https://tyroapis.herokuapp.com",
+    "basePath": "/",
+    "tags": [
+        {
+            "name": "user"
+        },
+        {
+            "name": "users"
+        },
+        {
+            "name": "topic"
+        },
+        {
+            "name": "topics"
+        },
+        {
+            "name": "article"
+        }
+    ],
+    "schemes": [
+        "http"
+    ],
+    "paths": {
+        "/user/signup": {
+            "post": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Signs user into the system",
+                "description": "",
+                "operationId": "userSignup",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Signup User object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/signupUser"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful signup",
+                        "headers": {
+                            "Access-Control-Allow-Origin": {
+                                "type": "string",
+                                "format": "string",
+                                "description": "Allows CORS Requests"
+                            },
+                            "Authorization": {
+                                "type": "string",
+                                "format": "Bearer xxx.xxx.xxx",
+                                "description": "JWT Auth token"
+                            },
+                            "Access-Control-Expose-Headers": {
+                                "type": "string",
+                                "format": "string",
+                                "description": "Exposes Authorization header"
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Email already exists"
+                    },
+                    "400": {
+                        "description": "Invalid Request Body"
+                    },
+                    "204": {
+                        "description": "Empty Request Body"
+                    }
+                }
+            }
+        },
+        "/user/login": {
+            "post": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Logs user into the system",
+                "description": "",
+                "operationId": "loginUser",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Signup User object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/loginUser"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "headers": {
+                            "Access-Control-Allow-Origin": {
+                                "type": "string",
+                                "format": "string",
+                                "description": "Allows CORS Requests"
+                            },
+                            "Authorization": {
+                                "type": "string",
+                                "format": "Bearer xxx.xxx.xxx",
+                                "description": "JWT Auth token"
+                            },
+                            "Access-Control-Expose-Headers": {
+                                "type": "string",
+                                "format": "string",
+                                "description": "Exposes Authorization header"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid username/password supplied"
+                    },
+                    "204": {
+                        "description": "Empty Request Body"
+                    }
+                }
+            }
+        },
+        "/user/follow/{userId}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Follows a user by userId(ObjectId)",
+                "description": "",
+                "operationId": "followUser",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "userId of user to follow",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Follow successful"
+                    },
+                    "400": {
+                        "description": "Already following"
+                    }
+                }
+            }
+        },
+        "/user/unfollow/{userId}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Unfollows a user by userId(ObjectId)",
+                "description": "",
+                "operationId": "unfollowUser",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "userId of user to unfollow",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Unfollow successful"
+                    }
+                }
+            }
+        },
+        "/users": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get Users",
+                "operationId": "getUsers",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "count",
+                        "in": "query",
+                        "description": "number of user to be listed, if count is not passed all users are returned",
+                        "required": false,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/User"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/topic/follow/{topicId}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": [
+                    "topic"
+                ],
+                "summary": "Follows a topic by topicId(ObjectId)",
+                "description": "",
+                "operationId": "followTopic",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "topicId",
+                        "in": "path",
+                        "description": "topicId of topic to follow",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Follow successful"
+                    },
+                    "400": {
+                        "description": "Already following"
+                    }
+                }
+            }
+        },
+        "/topic/unfollow/{topicId}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": [
+                    "topic"
+                ],
+                "summary": "Unfollows a topic by topicId(ObjectId)",
+                "description": "",
+                "operationId": "unfollowTopic",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "topicId",
+                        "in": "path",
+                        "description": "topicId of topic to unfollow",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Unfollow successful"
+                    }
+                }
+            }
+        },
+        "/topic/autocomplete/{topicSubString}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": [
+                    "topic"
+                ],
+                "summary": "Gets Array of topic object matching with the sub-string",
+                "description": "",
+                "operationId": "",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "topicSubString",
+                        "in": "path",
+                        "description": "topic sub-string of a particular topic",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Topic"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/topics": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": [
+                    "topics"
+                ],
+                "summary": "Get Topics",
+                "operationId": "getTopics",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "count",
+                        "in": "query",
+                        "description": "number of topics to be listed, if count is not passed all topics are returned",
+                        "required": false,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Topic"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/article/createPost": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": [
+                    "article"
+                ],
+                "summary": "Adds a article to the system",
+                "description": "",
+                "operationId": "addArticle",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Signup User object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Article"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Article Published"
+                    },
+                    "204": {
+                        "description": "Empty Request Body"
+                    }
+                }
+            }
+        },
+        "/article/feed": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": [
+                    "article"
+                ],
+                "summary": "Returns article related to the people and topic, the user is following ",
+                "description": "",
+                "operationId": "feed",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/feedArticle"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/article/trending": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": [
+                    "article"
+                ],
+                "summary": "Returns article based on number of hits",
+                "description": "",
+                "operationId": "trending",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/trendingArticle"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "definitions": {
+        "User": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                }
+            },
+            "xml": {
+                "name": "User"
+            }
+        },
+        "loginUser": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            },
+            "xml": {
+                "name": "User"
+            }
+        },
+        "signupUser": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            },
+            "xml": {
+                "name": "User"
+            }
+        },
+        "Topic": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string"
+                },
+                "topicName": {
+                    "type": "string"
+                }
+            },
+            "xml": {
+                "name": "Topic"
+            }
+        },
+        "Article": {
+            "type": "object",
+            "properties": {
+                "title": {
+                    "type": "string"
+                },
+                "topic": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/topicId"
+                    }
+                },
+                "content": {
+                    "type": "string"
+                }
+            },
+            "xml": {
+                "name": "Article"
+            }
+        },
+        "feedArticle": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "createdOn": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            },
+            "xml": {
+                "name": "feedArticle"
+            }
+        },
+        "trendingArticle": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string"
+                },
+                "author": {
+                    "$ref": "#/definitions/Author"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "createdOn": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            },
+            "xml": {
+                "name": "feedArticle"
+            }
+        },
+        "topicId": {
+            "type": "object",
+            "properties": {
+                "topicid": {
+                    "type": "string"
+                }
+            }
+        },
+        "Author": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
