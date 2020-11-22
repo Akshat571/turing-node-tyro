@@ -78,4 +78,29 @@ router.get("/feed", function (req, res) {
     })
 })
 
+router.put("/view/:id",function(req,res){
+    var articleId=req.params.id;
+    tokenAuthincator(req, res, function (error, verifiedJwt) {
+        if (error) {
+            return res.status(StatusCodes.UNAUTHORIZED).json({
+                "error": { message: "UNAUTHORIZED" }
+            })
+        } else {
+            controller.viewArticle(articleId,function(error,result){
+                if (error) {
+                    return res.status(StatusCodes.BAD_REQUEST).json({
+                        "error":error
+                    })
+                } else {
+                    return res.status(StatusCodes.CREATED).json({
+                        result: {
+                            "message": "Increased views for the article"
+                        }
+                    })
+                }
+            })
+        }
+    })
+})
+
 module.exports = router;

@@ -6,7 +6,7 @@ const Topic = require('../models/topic');
 module.exports.createArticle = function (title, topics, content, authorId, success) {
     const date = new Date();
     var newArticle = new Article({
-        author: authorId, title: title, content: content, topics: topics, view: 4, createdOn: date
+        author: authorId, title: title, content: content, topics: topics, views: 0, createdOn: date
     });
     newArticle.save(function (error, publishedPost) {
         User.findOne({ _id: authorId }, function (error, user) {
@@ -25,7 +25,6 @@ module.exports.createArticle = function (title, topics, content, authorId, succe
         Topic.find({ _id: { $in: topics } }, function (error, result) {
             if (result) {
                 for (var i = 0; i < result.length; i++) {
-                    console.log(result[i]);
                     result[i].articles.push(publishedPost);
                     result[i].save();
                 }
@@ -76,3 +75,18 @@ module.exports.getFeed = (email, callback) => {
         })
 }
 
+module.exports.increaseView=function(articleId,success){
+    Article.findOne({_id:articleId},function(error,article){
+        if(error){
+            success({
+                message: "Couldnt find article"
+            }, null, null)
+            return;
+        }else{
+            article.views+=1;
+            article.save(function (error, articleWithIncreasedView) {
+                success(error,articleWithIncreasedView );
+            })
+        }
+    })
+}

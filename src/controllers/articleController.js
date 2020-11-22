@@ -51,3 +51,13 @@ module.exports.retriveFeed = function (email, callback) {
         }
     })
 }
+
+module.exports.viewArticle=function(articleId,callback){
+    articleDao.increaseView(articleId,function(error,newArticle){
+        if (error) {
+            callback(error, null);
+        } else {
+            callback(error, newArticle);
+        }
+    })
+}
