@@ -92,7 +92,7 @@ router.put("/view/:id",function(req,res){
                         "error":error
                     })
                 } else {
-                    return res.status(StatusCodes.CREATED).json({
+                    return res.status(StatusCodes.OK).json({
                         result: {
                             "message": "Increased views for the article"
                         }
