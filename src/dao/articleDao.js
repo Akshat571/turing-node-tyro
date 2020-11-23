@@ -106,7 +106,7 @@ module.exports.bookMarkArticle = function (userEmail, articleId, success) {
                     }, null, null)
                     return;
                 } else {
-                    user.articlesBookmarked.push(articleId);
+                    user.bookmarkedArticles.push(articleId);
                     user.save(function (error, newUser) {
                         success(error, newUser);
                     })
@@ -122,8 +122,8 @@ module.exports.checkIfArticleIsAlreadyBookmarked = (articleId, userEmail, callba
     User.findOne({ email: userEmail }, function (error, user) {
         if (user) {
             var flag = 0
-            for (var i in user.articlesBookmarked) {
-                if (user.articlesBookmarked[i] == articleId) {
+            for (var i in user.bookmarkedArticles) {
+                if (user.bookmarkedArticles[i] == articleId) {
                     flag = 1;
                     break;
                 }
@@ -155,9 +155,9 @@ module.exports.removeBookmark = (articleId, userEmail, success) => {
         else {
             User.findOne({ email: userEmail }, function (error, user) {
                 if (user) {
-                    for (var i in user.articlesBookmarked) {
-                        if (user.articlesBookmarked[i] == articleId) {
-                            user.articlesBookmarked.splice(i, 1);
+                    for (var i in user.bookmarkedArticles) {
+                        if (user.bookmarkedArticles[i] == articleId) {
+                            user.bookmarkedArticles.splice(i, 1);
                         }
                     }
                     user.save(function (error, user) {
@@ -260,4 +260,36 @@ module.exports.unlikeArticle = (articleId, userId, success) => {
             });
         }
     })
+}
+
+module.exports.getAllBookmarkedArticle = (email, callback) => {
+    User.findOne(
+        {
+            email: email
+        },
+        {
+            _id: 0,
+            __v: 0,
+            name: 0,
+            password: 0,
+            email: 0,
+            articles: 0,
+            topics:0,
+            profilePic:0,
+            peopleFollowing:0
+        },
+        {}).
+        populate({
+            path: 'bookmarkedArticles', select: 'content title author createdOn _id',
+            populate: {
+                path: 'author', select: 'name email _id',
+            },
+            options: { sort: { 'createdOn': -1 } }
+        }).
+        exec(function (error, feed) {
+            if (error)
+                callback(error, null);
+            else
+                callback(error, feed);
+        })
 }

@@ -65,5 +65,26 @@ router.put("/remove/:id", function (req, res) {
 
 })
 
+router.get("/", function (req, res) {
+    tokenAuthincator(req, res, function (error, verifiedJwt) {
+        if (error) {
+            return res.status(StatusCodes.UNAUTHORIZED).json({
+                "error": { message: "UNAUTHORIZED" }
+            })
+        } else {
+            controller.retriveAllBookmarkedArticles(verifiedJwt.email, function (error, articles) {
+                if (error) {
+                    return res.json({
+                        error: {
+                            message: error.name
+                        }
+                    })
+                } else
+                    res.send(articles);
+            })
+        }
+    })
+})
+
 
 module.exports = router;
