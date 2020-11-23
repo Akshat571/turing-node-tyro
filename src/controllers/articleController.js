@@ -52,8 +52,8 @@ module.exports.retriveFeed = function (email, callback) {
     })
 }
 
-module.exports.viewArticle=function(articleId,callback){
-    articleDao.increaseView(articleId,function(error,newArticle){
+module.exports.viewArticle = function (articleId, callback) {
+    articleDao.increaseView(articleId, function (error, newArticle) {
         if (error) {
             callback(error, null);
         } else {
@@ -62,23 +62,58 @@ module.exports.viewArticle=function(articleId,callback){
     })
 }
 
-module.exports.bookMarkAnArticle=function(userEmail,articleId,callback){
+module.exports.bookMarkAnArticle = function (userEmail, articleId, callback) {
     articleDao.checkIfArticleIsAlreadyBookmarked(articleId, userEmail, function (error, result) {
         if (result == null) {
             callback(error, null);
         }
         else {
-            articleDao.bookMarkArticle(userEmail,articleId,function(error,user){
-               callback(error,user);
+            articleDao.bookMarkArticle(userEmail, articleId, function (error, user) {
+                callback(error, user);
+            })
+
+        }
+    })
+
+}
+
+module.exports.removeBookmark = function (userEmail, articleId, callback) {
+    articleDao.removeBookmark(articleId, userEmail, function (error, result) {
+        callback(error, result)
+    })
+}
+
+module.exports.likeArticle = function (userEmail, articleId, callback) {
+    userDao.getUser(userEmail, function (error, user) {
+        if (error) {
+            callback(error, null);
+        } else {
+            const userId = user._id;
+            articleDao.checkIfArticleIsAlreadyLiked(articleId, userId, function (error, result) {
+                if (result == null) {
+                    callback(error, null);
+                }
+                else {
+                    articleDao.likeArticle(userId, articleId, function (error, user) {
+                        callback(error, user);
+                    })
+                }
+            })
+        }
+    })
+}
+
+module.exports.unlikeArticle = function (userEmail, articleId, callback) {
+    userDao.getUser(userEmail, function (error, user) {
+        if (error) {
+            callback(error, null);
+        } else {
+            const userId = user._id;
+            articleDao.unlikeArticle(articleId,userId, function (error, result) {
+                callback(error, result)
             })
            
         }
     })
- 
-}
-
-module.exports.removeBookmark = function ( userEmail,articleId, callback) {
-    articleDao.removeBookmark(articleId, userEmail, function (error, result) {
-        callback(error, result)
-    })
+   
 }
