@@ -75,18 +75,106 @@ module.exports.getFeed = (email, callback) => {
         })
 }
 
-module.exports.increaseView=function(articleId,success){
-    Article.findOne({_id:articleId},function(error,article){
-        if(error){
+module.exports.increaseView = function (articleId, success) {
+    Article.findOne({ _id: articleId }, function (error, article) {
+        if (error) {
             success({
                 message: "Couldnt find article"
             }, null, null)
             return;
-        }else{
-            article.views+=1;
+        } else {
+            article.views += 1;
             article.save(function (error, articleWithIncreasedView) {
-                success(error,articleWithIncreasedView );
+                success(error, articleWithIncreasedView);
             })
+        }
+    })
+}
+
+module.exports.bookMarkArticle = function (userEmail, articleId, success) {
+    Article.findOne({ _id: articleId }, function (error, article) {
+        if (error) {
+            success({
+                message: "Couldnt find Article"
+            }, null, null)
+            return;
+        } else {
+            User.findOne({ email: userEmail }, function (error, user) {
+                if (error) {
+                    success({
+                        message: "Couldnt find user"
+                    }, null, null)
+                    return;
+                } else {
+                    user.articlesBookmarked.push(articleId);
+                    user.save(function (error, newUser) {
+                        success(error, newUser);
+                    })
+
+                }
+            })
+
+        }
+    })
+}
+
+module.exports.checkIfArticleIsAlreadyBookmarked = (articleId, userEmail, callback) => {
+    User.findOne({ email: userEmail }, function (error, user) {
+        if (user) {
+            var flag = 0
+            for (var i in user.articlesBookmarked) {
+                if (user.articlesBookmarked[i] == articleId) {
+                    flag = 1;
+                    break;
+                }
+            }
+            if (flag == 0) {
+                callback(null, user)
+            }
+            else {
+                callback(error, null)
+            }
+        } else {
+            callback({
+                "result": {
+                    message: "Couldnt find user"
+                }
+            }, null, null)
+            return;
+        }
+    });
+}
+
+module.exports.removeBookmark = (articleId, userEmail, success) => {
+    Article.findOne({ _id: articleId }, function (error, topic) {
+        if (error) {
+            success({
+                "result": {
+                    message: "Couldnt find article"
+                }
+            }, null, null)
+            return;
+        }
+        else {
+            User.findOne({ email: userEmail }, function (error, user) {
+                if (user) {
+                    for (var i in user.articlesBookmarked) {
+                        if (user.articlesBookmarked[i] == articleId) {
+                            user.articlesBookmarked.splice(i, 1);
+                        }
+                    }
+                    user.save(function (error, user) {
+                        success(error, user);
+                    })
+                } else {
+                    success({
+                        "result": {
+                            message: "Couldnt find article"
+                        }
+                    }, null, null)
+                    return;
+                }
+            });
         }
     })
 }

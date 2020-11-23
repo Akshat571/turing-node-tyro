@@ -61,3 +61,24 @@ module.exports.viewArticle=function(articleId,callback){
         }
     })
 }
+
+module.exports.bookMarkAnArticle=function(userEmail,articleId,callback){
+    articleDao.checkIfArticleIsAlreadyBookmarked(articleId, userEmail, function (error, result) {
+        if (result == null) {
+            callback(error, null);
+        }
+        else {
+            articleDao.bookMarkArticle(userEmail,articleId,function(error,user){
+               callback(error,user);
+            })
+           
+        }
+    })
+ 
+}
+
+module.exports.removeBookmark = function ( userEmail,articleId, callback) {
+    articleDao.removeBookmark(articleId, userEmail, function (error, result) {
+        callback(error, result)
+    })
+}
