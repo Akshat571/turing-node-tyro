@@ -178,3 +178,58 @@ module.exports.removeBookmark = (articleId, userEmail, success) => {
         }
     })
 }
+
+module.exports.checkIfArticleIsAlreadyLiked = (articleId, userId, callback) => {
+    Article.findOne({ _id: articleId }, function (error, article) {
+        if (article) {
+            var flag = 0
+            for (var i in article.peopleWhoLikedArticle) {
+                if (article.peopleWhoLikedArticle[i].equals(userId)) {
+                    flag = 1;
+                    break;
+                }
+            }
+            if (flag == 0) {
+                callback(null, article)
+            }
+            else {
+                callback(error, null)
+            }
+        } else {
+            callback({
+                
+                    message: "Couldnt find article"
+                
+            }, null, null)
+            return;
+        }
+    });
+}
+
+module.exports.likeArticle = function (userId, articleId, success) {
+    User.findOne({ _id: userId }, function (error, user) {
+        if (error) {
+            success({
+                message: "Couldnt find User"
+            }, null, null)
+            return;
+        } else {
+            Article.findOne({ _id: articleId }, function (error, article) {
+                if (error) {
+                    success({
+                        message: "Couldnt find article"
+                    }, null, null)
+                    return;
+                } else {
+                    article.peopleWhoLikedArticle.push(userId);
+                    article.noOfLikes=article.peopleWhoLikedArticle.length;
+                    article.save(function (error, newArticle) {
+                        success(error, newArticle);
+                    })
+
+                }
+            })
+
+        }
+    })
+}
