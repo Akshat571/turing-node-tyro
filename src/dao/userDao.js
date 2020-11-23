@@ -18,7 +18,7 @@ module.exports.getUser = function (email, callback) {
 };
 
 module.exports.getUserByCount = function (count, callback) {
-    let projection = { articles: 0, topics: 0, peopleFollowing: 0, password: 0, __v: 0 };
+    let projection = { articles: 0, topics: 0, peopleFollowing: 0, password: 0, __v: 0, articlesBookmarked: 0 };
     if (count !== undefined) {
         User.find({}, projection, { limit: Number(count) }).
             exec(function (error, user) {

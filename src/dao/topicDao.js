@@ -123,7 +123,7 @@ module.exports.getTopicsByCount = function (count, callback) {
 
 module.exports.getUserTopics = (email, callback) => {
     console.log(email);
-    User.findOne({ email: email }, 'topics -_id').
+    User.findOne({ email: email }, 'topics -_id -peopleWhoLikedArticle').
         exec(function (error, userTopics) {
             if (error || userTopics == null)
                 callback(error, []);

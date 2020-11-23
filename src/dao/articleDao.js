@@ -136,7 +136,7 @@ module.exports.checkIfArticleIsAlreadyBookmarked = (articleId, userEmail, callba
             }
         } else {
             callback({
-                    message: "Couldnt find user"
+                message: "Couldnt find user"
 
             }, null, null)
             return;
@@ -148,7 +148,7 @@ module.exports.removeBookmark = (articleId, userEmail, success) => {
     Article.findOne({ _id: articleId }, function (error, topic) {
         if (error) {
             success({
-                    message: "Couldnt find article"
+                message: "Couldnt find article"
             }, null, null)
             return;
         }
@@ -247,13 +247,13 @@ module.exports.unlikeArticle = (articleId, userId, success) => {
                             article.peopleWhoLikedArticle.splice(i, 1);
                         }
                     }
-                    article.noOfLikes=article.peopleWhoLikedArticle.length;
+                    article.noOfLikes = article.peopleWhoLikedArticle.length;
                     article.save(function (error, article) {
                         success(error, article);
                     })
                 } else {
                     success({
-                         message: "Couldnt find article"
+                        message: "Couldnt find article"
                     }, null, null)
                     return;
                 }
