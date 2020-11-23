@@ -1,5 +1,6 @@
 const Topic = require('../models/topic');
 const User = require('../models/user');
+const { use } = require('../routes/topicsRoute');
 
 
 module.exports.findSimilarTopics = (topic, success) => {
@@ -108,14 +109,24 @@ module.exports.checkIfTopicAlreadyExists = (topicId, userEmail, callback) => {
 
 module.exports.getTopicsByCount = function (count, callback) {
     if (count !== undefined) {
-        Topic.find({}, { articles: 0, __v: 0 }, { limit: Number(count) }).
-            exec(function (error, topicArr) {
-                callback(error, topicArr);
+        Topic.find({}, { articles: 0, __v: 0 }, { limit: Number(count) }).lean().
+            exec(function (error, topics) {
+                callback(error, topics);
             })
     } else {
-        Topic.find({}, { articles: 0, __v: 0 }).
-            exec(function (error, topicArr) {
-                callback(error, topicArr);
+        Topic.find({}, { articles: 0, __v: 0 }).lean().
+            exec(function (error, topics) {
+                callback(error, topics);
             })
     }
+}
+
+module.exports.getUserTopics = (email, callback) => {
+    console.log(email);
+    User.findOne({ email: email }, 'topics -_id').
+        exec(function (error, userTopics) {
+            if (error || userTopics == null)
+                callback(error, []);
+            callback(error, userTopics);
+        });
 }

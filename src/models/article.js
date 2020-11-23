@@ -13,6 +13,8 @@ const ArticleSchema = new Schema({
     },
     topics: [{ type: Schema.Types.ObjectId, ref: 'Topic' }],
     views: { type: Number },
+    noOfLikes:{ type: Number },
+    peopleWhoLikedArticle: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     createdOn: { type: Date },
 });
 

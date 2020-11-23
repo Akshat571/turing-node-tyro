@@ -14,7 +14,8 @@ router.get("/", (req, res) => {
             })
         } else {
             let count = req.query.count;
-            controller.retriveTopicsByCount(count, function (topicError, topics) {
+            let email = verifiedJwt.email;
+            controller.retriveTopicsByCount(count, email, function (topicError, topics) {
                 if (topicError) {
                     res.send({
                         error: topicError.name
