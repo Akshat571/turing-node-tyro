@@ -136,9 +136,8 @@ module.exports.checkIfArticleIsAlreadyBookmarked = (articleId, userEmail, callba
             }
         } else {
             callback({
-                "result": {
                     message: "Couldnt find user"
-                }
+
             }, null, null)
             return;
         }
@@ -149,9 +148,7 @@ module.exports.removeBookmark = (articleId, userEmail, success) => {
     Article.findOne({ _id: articleId }, function (error, topic) {
         if (error) {
             success({
-                "result": {
                     message: "Couldnt find article"
-                }
             }, null, null)
             return;
         }
@@ -197,9 +194,9 @@ module.exports.checkIfArticleIsAlreadyLiked = (articleId, userId, callback) => {
             }
         } else {
             callback({
-                
-                    message: "Couldnt find article"
-                
+
+                message: "Couldnt find article"
+
             }, null, null)
             return;
         }
@@ -222,7 +219,7 @@ module.exports.likeArticle = function (userId, articleId, success) {
                     return;
                 } else {
                     article.peopleWhoLikedArticle.push(userId);
-                    article.noOfLikes=article.peopleWhoLikedArticle.length;
+                    article.noOfLikes = article.peopleWhoLikedArticle.length;
                     article.save(function (error, newArticle) {
                         success(error, newArticle);
                     })
@@ -230,6 +227,37 @@ module.exports.likeArticle = function (userId, articleId, success) {
                 }
             })
 
+        }
+    })
+}
+
+module.exports.unlikeArticle = (articleId, userId, success) => {
+    User.findOne({ _id: userId }, function (error, user) {
+        if (error) {
+            success({
+                message: "Couldnt find user"
+            }, null, null)
+            return;
+        }
+        else {
+            Article.findOne({ _id: articleId }, function (error, article) {
+                if (article) {
+                    for (var i in article.peopleWhoLikedArticle) {
+                        if (article.peopleWhoLikedArticle[i].equals(userId)) {
+                            article.peopleWhoLikedArticle.splice(i, 1);
+                        }
+                    }
+                    article.noOfLikes=article.peopleWhoLikedArticle.length;
+                    article.save(function (error, article) {
+                        success(error, article);
+                    })
+                } else {
+                    success({
+                         message: "Couldnt find article"
+                    }, null, null)
+                    return;
+                }
+            });
         }
     })
 }

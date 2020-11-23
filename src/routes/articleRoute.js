@@ -136,4 +136,38 @@ router.put("/like/:id",function(req,res){
 
 })
 
+
+router.put("/unlike/:id",function(req,res){
+    var articleId = req.params.id;
+    tokenAuthincator(req, res, function (error, verifiedJwt) {
+        if (error) {
+            return res.status(StatusCodes.UNAUTHORIZED).json({
+                "error": { message: "UNAUTHORIZED" }
+            })
+        } else {
+            var userEmail = verifiedJwt.email;
+            controller.unlikeArticle(userEmail, articleId, function (error, result) {
+                if (error) {
+                    return res.status(StatusCodes.BAD_REQUEST).json({
+                        "error": error
+                    })
+                } else if (result == null) {
+                   return  res.status(StatusCodes.BAD_REQUEST).json({
+                        error: {
+                            "message": "Already unliked the article"
+                        }
+                    })
+                } else {
+                    return res.status(StatusCodes.OK).json({
+                        result: {
+                            "message": "UnLiked this article"
+                        }
+                    })
+                }
+            })
+        }
+    })
+
+})
+
 module.exports=router;

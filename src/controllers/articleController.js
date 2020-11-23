@@ -90,7 +90,6 @@ module.exports.likeArticle = function (userEmail, articleId, callback) {
         } else {
             const userId = user._id;
             articleDao.checkIfArticleIsAlreadyLiked(articleId, userId, function (error, result) {
-                console.log(result);
                 if (result == null) {
                     callback(error, null);
                 }
@@ -102,4 +101,19 @@ module.exports.likeArticle = function (userEmail, articleId, callback) {
             })
         }
     })
+}
+
+module.exports.unlikeArticle = function (userEmail, articleId, callback) {
+    userDao.getUser(userEmail, function (error, user) {
+        if (error) {
+            callback(error, null);
+        } else {
+            const userId = user._id;
+            articleDao.unlikeArticle(articleId,userId, function (error, result) {
+                callback(error, result)
+            })
+           
+        }
+    })
+   
 }
