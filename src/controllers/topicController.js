@@ -25,11 +25,25 @@ module.exports.unfollowTopic = function (topicId, userEmail, callback) {
     })
 }
 
-module.exports.retriveTopicsByCount = function (count, callback) {
-    TopicDao.getTopicsByCount(count, function (error, topicArr) {
-        if (error || topicArr.length === 0)
+module.exports.retriveTopicsByCount = function (count, email, callback) {
+    TopicDao.getTopicsByCount(count, function (error, topics) {
+        if (error)
             callback(error, null);
-        else
-            callback(error, topicArr);
+        else {
+            TopicDao.getUserTopics(email, function (error, userTopics) {
+                if (error)
+                    callback(error, null);
+                else {
+                    for (let i = 0; i < topics.length; i++) {
+                        if (userTopics.topics.includes(topics[i]._id)) {
+                            topics[i].isFollowing = true;
+                        } else {
+                            topics[i].isFollowing = false;
+                        }
+                    }
+                    callback(error, topics);
+                }
+            });
+        }
     })
 }
