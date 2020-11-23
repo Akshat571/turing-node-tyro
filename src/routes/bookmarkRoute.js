@@ -28,7 +28,7 @@ router.put("/add/:id", function (req, res) {
                 } else {
                     return res.status(StatusCodes.OK).json({
                         result: {
-                            "message": "Article has been added as bookmark"
+                            "message": "Bookmarked this article"
                         }
                     })
                 }
