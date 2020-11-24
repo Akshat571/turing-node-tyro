@@ -1,7 +1,7 @@
 var mongoose = require("mongoose");
 module.exports.start = function (success) {
   // Build the connection string
-  // var dbURI = "mongodb://localhost/tyroDB";
+ // var dbURI = "mongodb://localhost/tyroDB";
 
   var dbURI = "mongodb+srv://akshat:Qwerty@123@tyrocluster.e1fys.mongodb.net/tyroDB";
   // Create the database connection

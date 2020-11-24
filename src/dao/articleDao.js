@@ -293,3 +293,12 @@ module.exports.getAllBookmarkedArticle = (email, callback) => {
                 callback(error, feed);
         })
 }
+
+module.exports.getArticle = function (articleId, callback) {
+    Article.findOne({ _id: articleId }, { __v: 0, views: 0,  topics: 0 }).populate({
+        path: 'author', select: 'name email _id'
+    }).lean().exec(function (error, article) {
+        console.log(article);
+        callback(error, article)
+    })
+}

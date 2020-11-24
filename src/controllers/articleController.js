@@ -109,13 +109,13 @@ module.exports.unlikeArticle = function (userEmail, articleId, callback) {
             callback(error, null);
         } else {
             const userId = user._id;
-            articleDao.unlikeArticle(articleId,userId, function (error, result) {
+            articleDao.unlikeArticle(articleId, userId, function (error, result) {
                 callback(error, result)
             })
-           
+
         }
     })
-   
+
 }
 
 module.exports.retriveAllBookmarkedArticles = function (email, callback) {
@@ -123,7 +123,36 @@ module.exports.retriveAllBookmarkedArticles = function (email, callback) {
         if (error || bookmarkedArticles.length == 0)
             callback(error, null);
         else {
-            callback(null,bookmarkedArticles)
+            callback(null, bookmarkedArticles)
+        }
+    })
+}
+
+module.exports.readArticle = function (userEmail, articleId, callback) {
+
+    userDao.getUser(userEmail, function (error, user) {
+        if (error) {
+            callback(error, null);
+        } else {
+            articleDao.getArticle(articleId, function (error, article) {
+                if (error) {
+                    callback(error, null);
+                } else {
+                    console.log(article);
+                    article.hasLiked = false;
+                    for (i = 0; i < article.peopleWhoLikedArticle.length; i++) {
+                        if (article.peopleWhoLikedArticle[i].equals(user._id))
+                            article.hasLiked = true;
+                    }
+                    article.hasBookmarked = false;
+                    for (let i = 0; i < user.bookmarkedArticles.length; i++) {
+                        if (user.bookmarkedArticles[i].equals(articleId))
+                            article.hasBookmarked = true;
+                    }
+                    delete article.peopleWhoLikedArticle;
+                    callback(error, article)
+                }
+            })
         }
     })
 }
