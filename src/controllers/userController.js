@@ -74,3 +74,22 @@ module.exports.unfollowUser = function (userId, userEmail, callback) {
     callback(error, result)
   })
 }
+
+module.exports.addProfilePic = function (email, imgUrl, public_id, callback) {
+  userDao.updateProfilePic(email, imgUrl, public_id, function (error, docs) {
+    if (error)
+      callback(error, null);
+    else
+      callback(error, docs);
+  })
+}
+
+module.exports.retriveProfilePic = function (email, callback) {
+  userDao.getProfilePic(email, function (error, doc) {
+    if (error) {
+      callback(error, null);
+    } else {
+      callback(error, doc);
+    }
+  })
+}

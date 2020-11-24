@@ -22,6 +22,7 @@
     "bcrypt-nodejs": "0.0.3",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "cloudinary": "^1.23.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "http-status-code": "^2.1.0",
@@ -31,6 +32,7 @@
     "lodash.uniq": "^4.5.0",
     "mongoose": "^5.10.13",
     "morgan": "^1.10.0",
+    "multer": "^1.4.2",
     "njwt": "^1.0.0",
     "swagger-ui-express": "^4.1.5"
   },
