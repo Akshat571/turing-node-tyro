@@ -15,11 +15,18 @@ const UserSchema = new Schema({
     type: String,
     required: true
   },
-  profilePic: { type: String },
+  profilePic: {
+    url: {
+      type: String
+    },
+    public_id: {
+      type: String
+    }
+  },
   articles: [{ type: Schema.Types.ObjectId, ref: 'Article' }],
   topics: [{ type: Schema.Types.ObjectId, ref: 'Topic' }],
   peopleFollowing: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  bookmarkedArticles:[{ type: Schema.Types.ObjectId, ref: 'Article' }]
+  bookmarkedArticles: [{ type: Schema.Types.ObjectId, ref: 'Article' }]
 });
 
 module.exports = mongoose.model("User", UserSchema);

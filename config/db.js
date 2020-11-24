@@ -1,4 +1,5 @@
 var mongoose = require("mongoose");
+mongoose.set('useFindAndModify', false);
 module.exports.start = function (success) {
   // Build the connection string
   // var dbURI = "mongodb://localhost/tyroDB";

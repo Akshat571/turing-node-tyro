@@ -123,4 +123,26 @@ module.exports.checkIfUserAlreadyIsFollowing = (userId, userEmail, callback) => 
     });
 }
 
+module.exports.updateProfilePic = function (email, imgUrl, public_id, callback) {
+    const filter = { email: email };
+    const update = { $set: { "profilePic.url": imgUrl, "profilePic.public_id": public_id } };
+    User.findOneAndUpdate(filter, update, { new: true }, function (error, docs) {
+        if (error)
+            callback(error, null);
+        else {
+            callback(error, docs);
+        }
+    })
+}
+
+module.exports.getProfilePic = function (email, callback) {
+    User.findOne({ email: email }, 'profilePic', function (err, docs) {
+        if (err) {
+            callback(err, null);
+        } else {
+            callback(err, docs);
+        }
+    });
+};
+
 

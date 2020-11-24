@@ -5,6 +5,8 @@ const controller = require("../controllers/userController");
 const { handleResponse, tokenAuthincator } = require("../utils");
 const { tokenGenerator } = require("../utils");
 const StatusCodes = require('http-status-codes').StatusCodes;
+var upload = require('../../config/multer');
+const cloudinary = require('cloudinary').v2;
 
 router.post('/signup', function (req, res) {
   const { name, email, password } = req.body;
@@ -169,5 +171,82 @@ router.get('/unfollow/:id', function (req, res) {
     });
   }
 })
+
+cloudinary.config({
+  cloud_name: 'tyro-cdn',
+  api_key: '417161319278713',
+  api_secret: 'D-w09Etnd33Io7whHzhABadsACU'
+});
+
+router.put('/upload-image', upload.single('profilePic'), function (req, res) {
+  tokenAuthincator(req, res, function (error, verifiedJwt) {
+    if (error) {
+      return res.status(StatusCodes.UNAUTHORIZED).json({
+        "error": { message: "UNAUTHORIZED" }
+      })
+    } else {
+      controller.retriveProfilePic(verifiedJwt.email, function (error, doc) {
+        if (error) {
+          return res.status(StatusCodes.UNAUTHORIZED).json({
+            "error": { message: error.name }
+          })
+        } else {
+          if (doc.profilePic.public_id !== undefined) {
+            cloudinary.uploader.destroy(doc.profilePic.public_id, function (error, result) {
+              if (error) {
+                return res.status(StatusCodes.UNAUTHORIZED).json({
+                  "error": { message: "Cannot update, No profile picture found" }
+                })
+              } else {
+                cloudinary.uploader.upload(req.file.path, function (error, result) {
+                  if (error) {
+                    return res.status(StatusCodes.UNAUTHORIZED).json({
+                      "error": { message: "File upload failed " + error.name }
+                    })
+                  }
+                  else {
+                    controller.addProfilePic(verifiedJwt.email, result.secure_url, result.public_id, function (error, docs) {
+                      if (error) {
+                        return res.status(StatusCodes.UNAUTHORIZED).json({
+                          "error": { message: "File upload failed " + error.name }
+                        })
+                      } else {
+                        return res.status(StatusCodes.OK).json({
+                          "result": { message: "Image Updated" }
+                        })
+                      }
+                    })
+                  }
+                });
+              }
+            });
+          } else {
+            cloudinary.uploader.upload(req.file.path, function (error, result) {
+              if (error) {
+                return res.status(StatusCodes.UNAUTHORIZED).json({
+                  "error": { message: "File upload failed " + error.name }
+                })
+              }
+              else {
+                controller.addProfilePic(verifiedJwt.email, result.secure_url, result.public_id, function (error, docs) {
+                  if (error) {
+                    return res.status(StatusCodes.UNAUTHORIZED).json({
+                      "error": { message: "File upload failed " + error.name }
+                    })
+                  } else {
+                    return res.status(StatusCodes.OK).json({
+                      "result": { message: "Image Uploaded" }
+                    })
+                  }
+                })
+              }
+            });
+          }
+        }
+      })
+    }
+  })
+})
+
 
 module.exports = router;
