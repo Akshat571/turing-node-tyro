@@ -13,7 +13,8 @@ router.get("/", (req, res) => {
       })
     } else {
       let count = req.query.count;
-      controller.retriveUserByCount(count, function (userError, userArr) {
+      var userEmail=verifiedJwt.email;
+      controller.retriveUserByCount(count,userEmail, function (userError, userArr) {
         if (userError) {
           res.send({
             userError: userError.name

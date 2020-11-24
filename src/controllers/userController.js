@@ -31,13 +31,29 @@ module.exports.retriveUser = function (email, callback) {
   });
 };
 
-module.exports.retriveUserByCount = function (count, callback) {
-  userDao.getUserByCount(count, function (error, user) {
-    if (error || user.length === 0)
+module.exports.retriveUserByCount = function (count, userEmail, callback) {
+  userDao.getUser(userEmail, function (error, currentUser) {
+    if (error) {
       callback(error, null);
-    else
-      callback(error, user);
+    } else {
+      userDao.getUserByCount(count, function (error, users) {
+        if (error || users.length === 0)
+          callback(error, null);
+        else {
+          for (let i = 0; i < users.length; i++) {
+            if (currentUser.peopleFollowing.includes(users[i]._id)) {
+              users[i].isFollowing = true;
+            } else {
+              users[i].isFollowing = false;
+            }
+          }
+          callback(error, users);
+        }
+      })
+
+    }
   })
+
 }
 
 module.exports.followUser = function (userId, userEmail, callback) {
