@@ -170,4 +170,29 @@ router.put("/unlike/:id",function(req,res){
 
 })
 
+router.get('/read/:id',function(req,res){
+    var articleId = req.params.id;
+    tokenAuthincator(req, res, function (error, verifiedJwt) {
+        if (error) {
+            return res.status(StatusCodes.UNAUTHORIZED).json({
+                "error": { message: "UNAUTHORIZED" }
+            })
+        } else {
+            var userEmail = verifiedJwt.email;
+            controller.readArticle(userEmail,articleId,function(error,article){
+                if(error){
+                    return res.status(StatusCodes.BAD_REQUEST).json({
+                        "error": error
+                    })
+                }else{
+                    return res.status(StatusCodes.OK).json({
+                        "result": article
+                    })
+
+                }
+            })
+        }
+    })
+})
+
 module.exports=router;
