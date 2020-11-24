@@ -36,7 +36,7 @@ module.exports.createArticle = function (title, topics, content, authorId, succe
 module.exports.getTrendingArticle = (callback) => {
     const options = { sort: { count: -1 }, limit: 4 };
     Article.find({}, { topics: 0, __v: 0, content: 0, peopleWhoLikedArticle: 0 }, options).
-        populate('author', '_id name email').
+        populate('author', '_id name email profilePic').
         exec(function (error, articles) {
             if (error) {
                 callback(error, null);
@@ -295,7 +295,7 @@ module.exports.getAllBookmarkedArticle = (email, callback) => {
 }
 
 module.exports.getArticle = function (articleId, callback) {
-    Article.findOne({ _id: articleId }, { __v: 0, views: 0,  topics: 0 }).populate({
+    Article.findOne({ _id: articleId }, { __v: 0, views: 0, topics: 0 }).populate({
         path: 'author', select: 'name email _id'
     }).lean().exec(function (error, article) {
         console.log(article);
