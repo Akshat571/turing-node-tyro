@@ -34,7 +34,7 @@ module.exports.createArticle = function (title, topics, content, authorId, succe
 };
 
 module.exports.getTrendingArticle = (callback) => {
-    const options = { sort: { count: -1 }, limit: 4 };
+    const options = { sort: { views: -1 }, limit: 4 };
     Article.find({}, { topics: 0, __v: 0, content: 0, peopleWhoLikedArticle: 0 }, options).
         populate('author', '_id name email profilePic').
         exec(function (error, articles) {
@@ -63,9 +63,12 @@ module.exports.getFeed = (email, callback) => {
         populate({
             path: 'topics peopleFollowing', select: 'articles -_id',
             populate: {
-                path: 'articles', select: 'title content createdOn _id',
-            },
-            options: { sort: { 'createdOn': -1 } }
+                path: 'articles', select: 'title content createdOn _id author',
+                "options": { "sort": { "createdOn": -1 } },
+                populate: {
+                    path: 'author', select: 'name profilePic.url -_id'
+                }
+            }
         }).
         exec(function (error, feed) {
             if (error)

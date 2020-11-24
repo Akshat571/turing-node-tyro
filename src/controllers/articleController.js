@@ -28,17 +28,17 @@ module.exports.retriveTrendingArticles = (callback) => {
 }
 
 module.exports.retriveFeed = function (email, callback) {
-    articleDao.getFeed(email, function (error, feedArr) {
-        if (error || feedArr.length == 0)
+    articleDao.getFeed(email, function (error, feeds) {
+        if (error)
             callback(error, null);
         else {
             let ObjectIdset = new Set();
             let articles = [];
             let uniqueArticles = [];
-            feedArr.topics.map(obj => {
+            feeds.topics.map(obj => {
                 articles = [...articles, ...obj.articles];
             })
-            feedArr.peopleFollowing.map(obj => {
+            feeds.peopleFollowing.map(obj => {
                 articles = [...articles, ...obj.articles];
             })
             for (let i = 0; i < articles.length; i++) {
