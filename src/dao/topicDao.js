@@ -20,9 +20,9 @@ module.exports.addTopicToPerson = (topicId, userEmail, success) => {
     Topic.findOne({ _id: topicId }, function (error, topic) {
         if (error) {
             success({
-                "result": {
-                    message: "Couldnt find topic"
-                }
+
+                message: "Couldnt find topic"
+
             }, null, null)
             return;
         }
@@ -35,9 +35,9 @@ module.exports.addTopicToPerson = (topicId, userEmail, success) => {
                     })
                 } else {
                     success({
-                        result: {
+                        
                             message: "Couldnt find user"
-                        }
+                        
                     }, null, null)
                     return;
                 }
@@ -50,9 +50,8 @@ module.exports.removeTopicFromPerson = (topicId, userEmail, success) => {
     Topic.findOne({ _id: topicId }, function (error, topic) {
         if (error) {
             success({
-                "result": {
-                    message: "Couldnt find topic"
-                }
+
+                message: "Couldnt find topic"
             }, null, null)
             return;
         }
@@ -69,9 +68,9 @@ module.exports.removeTopicFromPerson = (topicId, userEmail, success) => {
                     })
                 } else {
                     success({
-                        "result": {
-                            message: "Couldnt find topic"
-                        }
+
+                        message: "Couldnt find topic"
+
                     }, null, null)
                     return;
                 }
@@ -98,9 +97,9 @@ module.exports.checkIfTopicAlreadyExists = (topicId, userEmail, callback) => {
             }
         } else {
             callback({
-                "result": {
-                    message: "Couldnt find topic"
-                }
+
+                message: "Couldnt find topic"
+
             }, null, null)
             return;
         }
