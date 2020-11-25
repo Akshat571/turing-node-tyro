@@ -36,9 +36,9 @@ module.exports.followAnUser = (userId, userEmail, success) => {
     User.findOne({ _id: userId }, function (error, existingUser) {
         if (error) {
             success({
-                "result": {
+                
                     message: "Couldnt find user"
-                }
+              
             }, null, null)
             return;
         }
@@ -66,9 +66,9 @@ module.exports.unfollowAnUser = (userId, userEmail, success) => {
     User.findOne({ _id: userId }, function (error, exisitingUser) {
         if (error) {
             success({
-                "result": {
+               
                     message: "Couldnt find user"
-                }
+               
             }, null, null)
             return;
         }
