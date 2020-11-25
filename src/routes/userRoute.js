@@ -100,7 +100,7 @@ router.post("/login", (req, res) => {
 
 
 
-router.get('/follow/:id', function (req, res) {
+router.put('/follow/:id', function (req, res) {
   const userId = req.params.id;
   if (userId != null) {
     tokenAuthincator(req, res, function (error, verifiedJwt) {
@@ -140,7 +140,7 @@ router.get('/follow/:id', function (req, res) {
 
 })
 
-router.get('/unfollow/:id', function (req, res) {
+router.put('/unfollow/:id', function (req, res) {
   const userId = req.params.id;
   if (userId != null) {
     tokenAuthincator(req, res, function (error, verifiedJwt) {

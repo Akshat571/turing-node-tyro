@@ -6,7 +6,7 @@ const StatusCodes = require('http-status-codes').StatusCodes;
 
 router.post('/createPost', function (req, res) {
     const { title, topics, content } = req.body;
-    if (title != null && content != null && topics != null) {
+    if (title !=(null||undefined)  && content != (null||undefined)  && topics != (null||undefined) && topics.length >0 ) {
         tokenAuthincator(req, res, function (error, verifiedJwt) {
             if (error) {
                 return res.status(StatusCodes.UNAUTHORIZED).json({

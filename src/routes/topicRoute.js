@@ -13,7 +13,7 @@ router.get('/autocomplete/:topic', function (req, res) {
 
 })
 
-router.get('/follow/:id', function (req, res) {
+router.put('/follow/:id', function (req, res) {
     const topicId = req.params.id;
     if (topicId != null) {
         tokenAuthincator(req, res, function (error, verifiedJwt) {
@@ -24,7 +24,6 @@ router.get('/follow/:id', function (req, res) {
             } else {
                 var userEmail = verifiedJwt.email;
                 controller.followTopic(topicId, userEmail, function (error, result) {
-                    console.log(result);
                     if (error) {
                         res.status(StatusCodes.BAD_REQUEST)
                     } else if (result == null) {
@@ -54,7 +53,7 @@ router.get('/follow/:id', function (req, res) {
 
 })
 
-router.get('/unfollow/:id', function (req, res) {
+router.put('/unfollow/:id', function (req, res) {
     const topicId = req.params.id;
     if (topicId != null) {
         tokenAuthincator(req, res, function (error, verifiedJwt) {
