@@ -1,8 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "REST API endpoints for project Tyro.",
-        "version": "1.0.0",
+        "description": "REST endpoints for project Tyro.",
+        "version": "1.0.1",
         "title": "Tyro APIs",
         "termsOfService": "",
         "contact": {
@@ -28,6 +28,9 @@
         },
         {
             "name": "article"
+        },
+        {
+            "name": "bookmarks"
         }
     ],
     "schemes": [
@@ -110,7 +113,7 @@
                     {
                         "in": "body",
                         "name": "body",
-                        "description": "Signup User object",
+                        "description": "Login User object",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/loginUser"
@@ -148,7 +151,7 @@
             }
         },
         "/user/follow/{userId}": {
-            "get": {
+            "put": {
                 "security": [
                     {
                         "Bearer": []
@@ -177,13 +180,13 @@
                         "description": "Follow successful"
                     },
                     "400": {
-                        "description": "Already following"
+                        "description": "Already following/Topic not found"
                     }
                 }
             }
         },
         "/user/unfollow/{userId}": {
-            "get": {
+            "put": {
                 "security": [
                     {
                         "Bearer": []
@@ -210,6 +213,9 @@
                 "responses": {
                     "200": {
                         "description": "Unfollow successful"
+                    },
+                    "400": {
+                        "description": "Topic not found"
                     }
                 }
             }
@@ -252,7 +258,7 @@
             }
         },
         "/topic/follow/{topicId}": {
-            "get": {
+            "put": {
                 "security": [
                     {
                         "Bearer": []
@@ -287,7 +293,7 @@
             }
         },
         "/topic/unfollow/{topicId}": {
-            "get": {
+            "put": {
                 "security": [
                     {
                         "Bearer": []
@@ -403,7 +409,7 @@
                 "tags": [
                     "article"
                 ],
-                "summary": "Adds a article to the system",
+                "summary": "Adds a article to the database",
                 "description": "",
                 "operationId": "addArticle",
                 "consumes": [
@@ -416,7 +422,7 @@
                     {
                         "in": "body",
                         "name": "body",
-                        "description": "Signup User object",
+                        "description": "Article Object",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/Article"
@@ -428,7 +434,7 @@
                         "description": "Article Published"
                     },
                     "204": {
-                        "description": "Empty Request Body"
+                        "description": "Empty Request Body/ Fields missing"
                     }
                 }
             }
@@ -490,6 +496,200 @@
                     }
                 }
             }
+        },
+        "/article/read": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": [
+                    "article"
+                ],
+                "summary": "Returns article by _id",
+                "description": "",
+                "operationId": "read",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/readArticle"
+                        }
+                    }
+                }
+            }
+        },
+        "/article/like/{articleId}": {
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": [
+                    "article"
+                ],
+                "summary": "Likes a article by articleId(ObjectId)",
+                "description": "",
+                "operationId": "",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "articleId",
+                        "in": "path",
+                        "description": "articleId of article to like",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liked the Article"
+                    },
+                    "400": {
+                        "description": "Already Liked/ Coudldn't find article"
+                    }
+                }
+            }
+        },
+        "/article/unlike/{articleId}": {
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": [
+                    "article"
+                ],
+                "summary": "Unlikes a article by articleId(ObjectId)",
+                "description": "",
+                "operationId": "",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "articleId",
+                        "in": "path",
+                        "description": "articleId of article to unlike",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Unliked this Article"
+                    }
+                }
+            }
+        },
+        "/bookmarks": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": [
+                    "bookmarks"
+                ],
+                "summary": "Get Bookmarked Articles",
+                "operationId": "getBookmark",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "count",
+                        "in": "query",
+                        "description": "number of topics to be listed, if count is not passed all bookmarks are returned",
+                        "required": false,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/bookmarkedArticle"
+                        }
+                    }
+                }
+            }
+        },
+        "/bookmarks/add/{articleId}": {
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": [
+                    "bookmarks"
+                ],
+                "summary": "Bookmarks article by articleId(ObjectId)",
+                "description": "",
+                "operationId": "",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "articleId",
+                        "in": "path",
+                        "description": "articleId of article to bookmark",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Bookmarked this Article"
+                    },
+                    "400": {
+                        "description": "Already bookmarked/ Couldn't find article"
+                    }
+                }
+            }
+        },
+        "/bookmarks/remove/{articleId}": {
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": [
+                    "bookmarks"
+                ],
+                "summary": "Unbookmarks article by articleId(ObjectId)",
+                "description": "",
+                "operationId": "",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "articleId",
+                        "in": "path",
+                        "description": "articleId of article to unbookmark",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Article is no longer bookmarked"
+                    }
+                }
+            }
         }
     },
     "securityDefinitions": {
@@ -511,6 +711,20 @@
                 },
                 "email": {
                     "type": "string"
+                },
+                "profilePic": {
+                    "nullable": true,
+                    "properties": {
+                        "public_id": {
+                            "type": "string"
+                        },
+                        "url": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "isFollowing": {
+                    "type": "boolean"
                 }
             },
             "xml": {
@@ -556,6 +770,9 @@
                 },
                 "topicName": {
                     "type": "string"
+                },
+                "isFollowing": {
+                    "type": "boolean"
                 }
             },
             "xml": {
@@ -587,6 +804,17 @@
             "properties": {
                 "_id": {
                     "type": "string"
+                },
+                "profilePic": {
+                    "nullable": true,
+                    "properties": {
+                        "public_id": {
+                            "type": "string"
+                        },
+                        "url": {
+                            "type": "string"
+                        }
+                    }
                 },
                 "title": {
                     "type": "string"
@@ -638,12 +866,100 @@
                 "_id": {
                     "type": "string"
                 },
+                "profilePic": {
+                    "type": "object",
+                    "properties": {
+                        "url": {
+                            "type": "string"
+                        },
+                        "public_id": {
+                            "type": "string"
+                        }
+                    }
+                },
                 "name": {
                     "type": "string"
                 },
                 "email": {
                     "type": "string"
                 }
+            }
+        },
+        "bookmarkedArticle": {
+            "type": "object",
+            "properties": {
+                "bookmarkedArticles": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "_id": {
+                                "type": "string"
+                            },
+                            "author": {
+                                "$ref": "#/definitions/Author"
+                            },
+                            "title": {
+                                "type": "string"
+                            },
+                            "content": {
+                                "type": "string"
+                            },
+                            "createdOn": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "readArticle": {
+            "type": "object",
+            "properties": {
+                "result": {
+                    "type": "object",
+                    "properties": {
+                        "title": {
+                            "type": "string"
+                        },
+                        "author": {
+                            "$ref": "#/definitions/readAuthor"
+                        },
+                        "content": {
+                            "type": "string"
+                        },
+                        "createdOn": {
+                            "type": "string",
+                            "format": "date-time"
+                        },
+                        "hasLiked": {
+                            "type": "boolean"
+                        },
+                        "hasBookmarked": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            },
+            "xml": {
+                "name": "readArticle"
+            }
+        },
+        "readAuthor": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                }
+            },
+            "xml": {
+                "name": "readAuthor"
             }
         }
     }
