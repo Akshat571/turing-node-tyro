@@ -35,9 +35,9 @@ module.exports.addTopicToPerson = (topicId, userEmail, success) => {
                     })
                 } else {
                     success({
-                        
-                            message: "Couldnt find user"
-                        
+
+                        message: "Couldnt find user"
+
                     }, null, null)
                     return;
                 }
@@ -129,4 +129,24 @@ module.exports.getUserTopics = (email, callback) => {
             else
                 callback(error, userTopics);
         });
+}
+
+module.exports.setArticleForTopics = function (topics, articleId, success) {
+    Topic.find({
+        _id: { $in: topics }}, function(error, result) {
+            if (error) {
+                success({
+                    message: "Couldnt find topic"
+                }, null, null)
+                return;
+            } else {
+                for (var i = 0; i < result.length; i++) {
+                    result[i].articles.push(articleId);
+                    result[i].save();
+                }
+                success(error, result)
+            }
+        }
+    )
+
 }

@@ -145,5 +145,18 @@ module.exports.getProfilePic = function (email, callback) {
     });
 };
 
+module.exports.setArticlesForUser=function(authorId,articleId,success){
+    User.findOne({_id:authorId},function(error,author){
+        if(error){
+            success(error,null)
+        }else{
+            author.articles.push(articleId);
+            author.save(function(error,user){
+                success(error,user)
+            })
+        }
+    })
+}
+
 
 

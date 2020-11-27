@@ -1,5 +1,6 @@
 const articleDao = require("../dao/articleDao");
 const userDao = require("../dao/userDao");
+const topicDao=require("../dao/topicDao")
 
 module.exports.publishPost = function (title, topics, content, author, callback) {
     userDao.getUser(author, function (error, user) {
@@ -11,7 +12,19 @@ module.exports.publishPost = function (title, topics, content, author, callback)
                 if (error) {
                     callback(error, null);
                 } else {
-                    callback(error, newArticle);
+                    userDao.setArticlesForUser(authorId,newArticle._id,function(error,user){
+                        if(error){
+                            callback(error, null);
+                        }else{
+                            topicDao.setArticleForTopics(topics,newArticle._id,function(error,topicsList){
+                                if(error){
+                                    callback(error, null);
+                                }else{
+                                    callback(error, newArticle);
+                                }
+                            })
+                        }
+                    })
                 }
             })
         }
@@ -139,7 +152,6 @@ module.exports.readArticle = function (userEmail, articleId, callback) {
                 if (error) {
                     callback(error, null);
                 } else {
-                    console.log(article);
                     article.hasLiked = false;
                     for (i = 0; i < article.peopleWhoLikedArticle.length; i++) {
                         if (article.peopleWhoLikedArticle[i].equals(user._id))
