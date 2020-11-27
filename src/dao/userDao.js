@@ -158,5 +158,44 @@ module.exports.setArticlesForUser=function(authorId,articleId,success){
     })
 }
 
+module.exports.addBookmark=function(userEmail,articleId,success){
+    User.findOne({ email: userEmail }, function (error, user) {
+        if (error) {
+            success({
+                message: "Couldnt find user"
+            }, null, null)
+            return;
+        } else {
+            user.bookmarkedArticles.push(articleId);
+            user.save(function (error, newUser) {
+                success(error, newUser);
+            })
+
+        }
+    })
+}
+
+module.exports.removeBookmark=function(userEmail,articleId,success){
+    User.findOne({ email: userEmail }, function (error, user) {
+        if (user) {
+            for (var i in user.bookmarkedArticles) {
+                if (user.bookmarkedArticles[i] == articleId) {
+                    user.bookmarkedArticles.splice(i, 1);
+                }
+            }
+            user.save(function (error, user) {
+                success(error, user);
+            })
+        } else {
+            success({
+                "result": {
+                    message: "Couldnt find article"
+                }
+            }, null, null)
+            return;
+        }
+    });
+}
+
 
 

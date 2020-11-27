@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const controller = require("../controllers/articleController");
+const controller = require("../controllers/bookmarkController");
 const { tokenAuthincator } = require("../utils");
 const StatusCodes = require('http-status-codes').StatusCodes;
 
@@ -14,7 +14,7 @@ router.put("/add/:id", function (req, res) {
             })
         } else {
             var userEmail = verifiedJwt.email;
-            controller.bookMarkAnArticle(userEmail, articleId, function (error, result) {
+            controller.addBookMark(userEmail, articleId, function (error, result) {
                 if (error) {
                     return res.status(StatusCodes.BAD_REQUEST).json({
                         "error": error
