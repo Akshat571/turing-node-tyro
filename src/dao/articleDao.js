@@ -279,7 +279,8 @@ module.exports.getAllBookmarkedArticle = (email, callback) => {
             articles: 0,
             topics: 0,
             profilePic:0,
-            peopleFollowing: 0
+            peopleFollowing: 0,
+            bookMarkArticles:0
         },
         {}).
         populate({
@@ -290,6 +291,7 @@ module.exports.getAllBookmarkedArticle = (email, callback) => {
             options: { sort: { 'createdOn': -1 } }
         }).
         exec(function (error, feed) {
+            console.log(feed);
             if (error)
                 callback(error, null);
             else

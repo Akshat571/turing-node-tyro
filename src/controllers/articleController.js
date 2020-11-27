@@ -123,7 +123,8 @@ module.exports.retriveAllBookmarkedArticles = function (email, callback) {
         if (error || bookmarkedArticles.length == 0)
             callback(error, null);
         else {
-            callback(null, bookmarkedArticles)
+            let articles=bookmarkedArticles.bookmarkedArticles;
+            callback(null, articles)
         }
     })
 }
