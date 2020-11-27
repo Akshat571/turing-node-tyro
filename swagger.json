@@ -220,6 +220,41 @@
                 }
             }
         },
+        "/user/upload-image": {
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Uploads/Updates the Profile Picture of the current user",
+                "description": "In order to upload/update the image, the `form` should have name = `profilePic` and enctype = `multipart/form-data`",
+                "operationId": "",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "profilePic",
+                        "in": "formData",
+                        "description": "image to be uploaded",
+                        "required": true,
+                        "type": "file"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "image uploaded/ image updated"
+                    }
+                }
+            }
+        },
         "/users": {
             "get": {
                 "security": [
@@ -605,15 +640,6 @@
                 "produces": [
                     "application/json"
                 ],
-                "parameters": [
-                    {
-                        "name": "count",
-                        "in": "query",
-                        "description": "number of topics to be listed, if count is not passed all bookmarks are returned",
-                        "required": false,
-                        "type": "integer"
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "successful operation",
@@ -738,7 +764,8 @@
                     "type": "string"
                 },
                 "password": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "password"
                 }
             },
             "xml": {
@@ -755,7 +782,8 @@
                     "type": "string"
                 },
                 "password": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "password"
                 }
             },
             "xml": {
