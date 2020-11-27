@@ -278,30 +278,32 @@ module.exports.getAllBookmarkedArticle = (email, callback) => {
             email: 0,
             articles: 0,
             topics: 0,
-            profilePic: 0,
-            peopleFollowing: 0
+            profilePic:0,
+            peopleFollowing: 0,
+            bookMarkArticles:0
         },
         {}).
         populate({
             path: 'bookmarkedArticles', select: 'content title author createdOn _id',
             populate: {
-                path: 'author', select: 'name email _id',
+                path: 'author', select: 'name email _id profilePic',
             },
             options: { sort: { 'createdOn': -1 } }
         }).
         exec(function (error, feed) {
+            console.log(feed);
             if (error)
                 callback(error, null);
             else
                 callback(error, feed);
+                
         })
 }
 
 module.exports.getArticle = function (articleId, callback) {
     Article.findOne({ _id: articleId }, { __v: 0, views: 0, topics: 0 }).populate({
-        path: 'author', select: 'name email _id'
+        path: 'author', select: 'name email _id profilePic'
     }).lean().exec(function (error, article) {
-        console.log(article);
         callback(error, article)
     })
 }
