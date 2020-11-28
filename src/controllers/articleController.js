@@ -1,6 +1,6 @@
 const articleDao = require("../dao/articleDao");
 const userDao = require("../dao/userDao");
-const topicDao=require("../dao/topicDao")
+const topicDao = require("../dao/topicDao")
 
 module.exports.publishPost = function (title, topics, content, author, callback) {
     userDao.getUser(author, function (error, user) {
@@ -12,14 +12,14 @@ module.exports.publishPost = function (title, topics, content, author, callback)
                 if (error) {
                     callback(error, null);
                 } else {
-                    userDao.setArticlesForUser(authorId,newArticle._id,function(error,user){
-                        if(error){
+                    userDao.setArticlesForUser(authorId, newArticle._id, function (error, user) {
+                        if (error) {
                             callback(error, null);
-                        }else{
-                            topicDao.setArticleForTopics(topics,newArticle._id,function(error,topicsList){
-                                if(error){
+                        } else {
+                            topicDao.setArticleForTopics(topics, newArticle._id, function (error, topicsList) {
+                                if (error) {
                                     callback(error, null);
-                                }else{
+                                } else {
                                     callback(error, newArticle);
                                 }
                             })
@@ -80,19 +80,34 @@ module.exports.likeArticle = function (userEmail, articleId, callback) {
         if (error) {
             callback(error, null);
         } else {
-            const userId = user._id;
-            articleDao.checkIfArticleIsAlreadyLiked(articleId, userId, function (error, result) {
-                if (result == null) {
-                    callback(error, null);
-                }
-                else {
-                    articleDao.likeArticle(userId, articleId, function (error, user) {
-                        callback(error, user);
-                    })
+            articleDao.getArticle(articleId, function (error, article) {
+                if (error) {
+                    callback(error, null)
+                } else {
+                    const userId = user._id;
+                    if (checkLikeStatus(article.peopleWhoLikedArticle,userId)) {
+                        callback(error,null);
+                     }
+                     else{
+                         articleDao.likeArticle(userId,articleId,function(error,article){
+                             callback(error,article)
+                         })
+                     }
+
                 }
             })
+
         }
     })
+}
+
+const checkLikeStatus = function (users, userId) {
+    for(var i=0;i<users.length;i++){
+        if(users[i].equals(userId)){
+            return true;
+        }
+    }
+    
 }
 
 module.exports.unlikeArticle = function (userEmail, articleId, callback) {
@@ -115,7 +130,7 @@ module.exports.retriveAllBookmarkedArticles = function (email, callback) {
         if (error || bookmarkedArticles.length == 0)
             callback(error, null);
         else {
-            let articles=bookmarkedArticles.bookmarkedArticles;
+            let articles = bookmarkedArticles.bookmarkedArticles;
             callback(null, articles)
         }
     })

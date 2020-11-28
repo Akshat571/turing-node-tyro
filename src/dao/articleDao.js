@@ -104,62 +104,47 @@ module.exports.checkIfArticleIsAlreadyLiked = (articleId, userId, callback) => {
 }
 
 module.exports.likeArticle = function (userId, articleId, success) {
-    User.findOne({ _id: userId }, function (error, user) {
+    Article.findOne({ _id: articleId }, function (error, article) {
         if (error) {
             success({
-                message: "Couldnt find User"
+                message: "Couldnt find article"
             }, null, null)
             return;
         } else {
-            Article.findOne({ _id: articleId }, function (error, article) {
-                if (error) {
-                    success({
-                        message: "Couldnt find article"
-                    }, null, null)
-                    return;
-                } else {
-                    article.peopleWhoLikedArticle.push(userId);
-                    article.noOfLikes = article.peopleWhoLikedArticle.length;
-                    article.save(function (error, newArticle) {
-                        success(error, newArticle);
-                    })
-
-                }
+            article.peopleWhoLikedArticle.push(userId);
+            article.noOfLikes = article.peopleWhoLikedArticle.length;
+            article.save(function (error, newArticle) {
+                success(error, newArticle);
             })
 
         }
     })
+
+
+
 }
 
 module.exports.unlikeArticle = (articleId, userId, success) => {
-    User.findOne({ _id: userId }, function (error, user) {
-        if (error) {
+    Article.findOne({ _id: articleId }, function (error, article) {
+        if (article) {
+            for (var i in article.peopleWhoLikedArticle) {
+                if (article.peopleWhoLikedArticle[i].equals(userId)) {
+                    article.peopleWhoLikedArticle.splice(i, 1);
+                }
+            }
+            article.noOfLikes = article.peopleWhoLikedArticle.length;
+            article.save(function (error, article) {
+                success(error, article);
+            })
+        } else {
             success({
-                message: "Couldnt find user"
+                message: "Couldnt find article"
             }, null, null)
             return;
         }
-        else {
-            Article.findOne({ _id: articleId }, function (error, article) {
-                if (article) {
-                    for (var i in article.peopleWhoLikedArticle) {
-                        if (article.peopleWhoLikedArticle[i].equals(userId)) {
-                            article.peopleWhoLikedArticle.splice(i, 1);
-                        }
-                    }
-                    article.noOfLikes = article.peopleWhoLikedArticle.length;
-                    article.save(function (error, article) {
-                        success(error, article);
-                    })
-                } else {
-                    success({
-                        message: "Couldnt find article"
-                    }, null, null)
-                    return;
-                }
-            });
-        }
-    })
+    });
+
+
 }
 
 module.exports.getAllBookmarkedArticle = (email, callback) => {
