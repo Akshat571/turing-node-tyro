@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const controller = require("../controllers/articleController");
-const { tokenAuthincator } = require("../utils");
+const { tokenAuthenticator } = require("../utils");
 const StatusCodes = require('http-status-codes').StatusCodes;
 
 router.post('/createPost', function (req, res) {
     const { title, topics, content } = req.body;
     if (title !=(null||undefined)  && content != (null||undefined)  && topics != (null||undefined) && topics.length >0 ) {
-        tokenAuthincator(req, res, function (error, verifiedJwt) {
+        tokenAuthenticator(req, res, function (error, verifiedJwt) {
             if (error) {
                 return res.status(StatusCodes.UNAUTHORIZED).json({
                     "error": { message: "UNAUTHORIZED" }
@@ -37,7 +37,7 @@ router.post('/createPost', function (req, res) {
 })
 
 router.get("/trending", function (req, res) {
-    tokenAuthincator(req, res, function (error, verifiedJwt) {
+    tokenAuthenticator(req, res, function (error, verifiedJwt) {
         if (error) {
             return res.status(StatusCodes.UNAUTHORIZED).json({
                 "error": { message: "UNAUTHORIZED" }
@@ -58,7 +58,7 @@ router.get("/trending", function (req, res) {
 })
 
 router.get("/feed", function (req, res) {
-    tokenAuthincator(req, res, function (error, verifiedJwt) {
+    tokenAuthenticator(req, res, function (error, verifiedJwt) {
         if (error) {
             return res.status(StatusCodes.UNAUTHORIZED).json({
                 "error": { message: "UNAUTHORIZED" }
@@ -80,7 +80,7 @@ router.get("/feed", function (req, res) {
 
 router.put("/view/:id", function (req, res) {
     var articleId = req.params.id;
-    tokenAuthincator(req, res, function (error, verifiedJwt) {
+    tokenAuthenticator(req, res, function (error, verifiedJwt) {
         if (error) {
             return res.status(StatusCodes.UNAUTHORIZED).json({
                 "error": { message: "UNAUTHORIZED" }
@@ -105,7 +105,7 @@ router.put("/view/:id", function (req, res) {
 
 router.put("/like/:id",function(req,res){
     var articleId = req.params.id;
-    tokenAuthincator(req, res, function (error, verifiedJwt) {
+    tokenAuthenticator(req, res, function (error, verifiedJwt) {
         if (error) {
             return res.status(StatusCodes.UNAUTHORIZED).json({
                 "error": { message: "UNAUTHORIZED" }
@@ -139,7 +139,7 @@ router.put("/like/:id",function(req,res){
 
 router.put("/unlike/:id",function(req,res){
     var articleId = req.params.id;
-    tokenAuthincator(req, res, function (error, verifiedJwt) {
+    tokenAuthenticator(req, res, function (error, verifiedJwt) {
         if (error) {
             return res.status(StatusCodes.UNAUTHORIZED).json({
                 "error": { message: "UNAUTHORIZED" }
@@ -172,7 +172,7 @@ router.put("/unlike/:id",function(req,res){
 
 router.get('/read/:id',function(req,res){
     var articleId = req.params.id;
-    tokenAuthincator(req, res, function (error, verifiedJwt) {
+    tokenAuthenticator(req, res, function (error, verifiedJwt) {
         if (error) {
             return res.status(StatusCodes.UNAUTHORIZED).json({
                 "error": { message: "UNAUTHORIZED" }

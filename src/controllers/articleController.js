@@ -1,5 +1,6 @@
 const articleDao = require("../dao/articleDao");
 const userDao = require("../dao/userDao");
+const topicDao = require("../dao/topicDao")
 
 module.exports.publishPost = function (title, topics, content, author, callback) {
     userDao.getUser(author, function (error, user) {
@@ -11,7 +12,19 @@ module.exports.publishPost = function (title, topics, content, author, callback)
                 if (error) {
                     callback(error, null);
                 } else {
-                    callback(error, newArticle);
+                    userDao.setArticlesForUser(authorId, newArticle._id, function (error, user) {
+                        if (error) {
+                            callback(error, null);
+                        } else {
+                            topicDao.setArticleForTopics(topics, newArticle._id, function (error, topicsList) {
+                                if (error) {
+                                    callback(error, null);
+                                } else {
+                                    callback(error, newArticle);
+                                }
+                            })
+                        }
+                    })
                 }
             })
         }
@@ -62,45 +75,39 @@ module.exports.viewArticle = function (articleId, callback) {
     })
 }
 
-module.exports.bookMarkAnArticle = function (userEmail, articleId, callback) {
-    articleDao.checkIfArticleIsAlreadyBookmarked(articleId, userEmail, function (error, result) {
-        if (result == null) {
-            callback(error, null);
-        }
-        else {
-            articleDao.bookMarkArticle(userEmail, articleId, function (error, user) {
-                callback(error, user);
-            })
-
-        }
-    })
-
-}
-
-module.exports.removeBookmark = function (userEmail, articleId, callback) {
-    articleDao.removeBookmark(articleId, userEmail, function (error, result) {
-        callback(error, result)
-    })
-}
-
 module.exports.likeArticle = function (userEmail, articleId, callback) {
     userDao.getUser(userEmail, function (error, user) {
         if (error) {
             callback(error, null);
         } else {
-            const userId = user._id;
-            articleDao.checkIfArticleIsAlreadyLiked(articleId, userId, function (error, result) {
-                if (result == null) {
-                    callback(error, null);
-                }
-                else {
-                    articleDao.likeArticle(userId, articleId, function (error, user) {
-                        callback(error, user);
-                    })
+            articleDao.getArticle(articleId, function (error, article) {
+                if (error) {
+                    callback(error, null)
+                } else {
+                    const userId = user._id;
+                    if (checkLikeStatus(article.peopleWhoLikedArticle,userId)) {
+                        callback(error,null);
+                     }
+                     else{
+                         articleDao.likeArticle(userId,articleId,function(error,article){
+                             callback(error,article)
+                         })
+                     }
+
                 }
             })
+
         }
     })
+}
+
+const checkLikeStatus = function (users, userId) {
+    for(var i=0;i<users.length;i++){
+        if(users[i].equals(userId)){
+            return true;
+        }
+    }
+    
 }
 
 module.exports.unlikeArticle = function (userEmail, articleId, callback) {
@@ -118,16 +125,6 @@ module.exports.unlikeArticle = function (userEmail, articleId, callback) {
 
 }
 
-module.exports.retriveAllBookmarkedArticles = function (email, callback) {
-    articleDao.getAllBookmarkedArticle(email, function (error, bookmarkedArticles) {
-        if (error || bookmarkedArticles.length == 0)
-            callback(error, null);
-        else {
-            callback(null, bookmarkedArticles)
-        }
-    })
-}
-
 module.exports.readArticle = function (userEmail, articleId, callback) {
 
     userDao.getUser(userEmail, function (error, user) {
@@ -138,7 +135,6 @@ module.exports.readArticle = function (userEmail, articleId, callback) {
                 if (error) {
                     callback(error, null);
                 } else {
-                    console.log(article);
                     article.hasLiked = false;
                     for (i = 0; i < article.peopleWhoLikedArticle.length; i++) {
                         if (article.peopleWhoLikedArticle[i].equals(user._id))
