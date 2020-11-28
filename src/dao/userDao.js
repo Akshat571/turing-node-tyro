@@ -231,5 +231,45 @@ module.exports.getAllBookmarkedArticle = (email, callback) => {
         })
 }
 
+module.exports.addTopic=function(userEmail,topicId,success){
+    User.findOne({ email: userEmail }, function (error, user) {
+        if (user) {
+            user.topics.push(topicId);
+            user.save(function (error, user) {
+                success(error, user);
+            })
+        } else {
+            success({
+
+                message: "Couldnt find user"
+
+            }, null, null)
+            return;
+        }
+    });
+}
+
+module.exports.removeTopic=function(userEmail,topicId,success){
+    User.findOne({ email: userEmail }, function (error, user) {
+        if (user) {
+            for (var i in user.topics) {
+                if (user.topics[i] == topicId) {
+                    user.topics.splice(i, 1);
+                }
+            }
+            user.save(function (error, user) {
+                success(error, user);
+            })
+        } else {
+            success({
+
+                message: "Couldnt find user"
+
+            }, null, null)
+            return;
+        }
+    });
+}
+
 
 

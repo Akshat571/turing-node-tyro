@@ -16,35 +16,7 @@ module.exports.findSimilarTopics = (topic, success) => {
     })
 }
 
-module.exports.addTopicToPerson = (topicId, userEmail, success) => {
-    Topic.findOne({ _id: topicId }, function (error, topic) {
-        if (error) {
-            success({
 
-                message: "Couldnt find topic"
-
-            }, null, null)
-            return;
-        }
-        else {
-            User.findOne({ email: userEmail }, function (error, user) {
-                if (user) {
-                    user.topics.push(topicId);
-                    user.save(function (error, user) {
-                        success(error, user);
-                    })
-                } else {
-                    success({
-
-                        message: "Couldnt find user"
-
-                    }, null, null)
-                    return;
-                }
-            });
-        }
-    })
-}
 
 module.exports.removeTopicFromPerson = (topicId, userEmail, success) => {
     Topic.findOne({ _id: topicId }, function (error, topic) {
@@ -79,33 +51,6 @@ module.exports.removeTopicFromPerson = (topicId, userEmail, success) => {
     })
 }
 
-module.exports.checkIfTopicAlreadyExists = (topicId, userEmail, callback) => {
-    User.findOne({ email: userEmail }, function (error, user) {
-        if (user) {
-            var flag = 0
-            for (var i in user.topics) {
-                if (user.topics[i] == topicId) {
-                    flag = 1;
-                    break;
-                }
-            }
-            if (flag == 0) {
-                callback(null, user)
-            }
-            else {
-                callback(error, null)
-            }
-        } else {
-            callback({
-
-                message: "Couldnt find topic"
-
-            }, null, null)
-            return;
-        }
-    });
-}
-
 module.exports.getTopicsByCount = function (count, callback) {
     if (count !== undefined) {
         Topic.find({}, { articles: 0, __v: 0 }, { limit: Number(count) }).lean().
@@ -121,7 +66,6 @@ module.exports.getTopicsByCount = function (count, callback) {
 }
 
 module.exports.getUserTopics = (email, callback) => {
-    console.log(email);
     User.findOne({ email: email }, 'topics -_id').
         exec(function (error, userTopics) {
             if (error || userTopics == null)
@@ -149,4 +93,17 @@ module.exports.setArticleForTopics = function (topics, articleId, success) {
         }
     )
 
+}
+
+module.exports.getTopic=function(topicId,success){
+    Topic.findOne({_id:topicId},function(error,topic){
+        if(error){
+            success({
+                message: "Couldnt find topic"
+            }, null, null)
+            return;
+        }else{
+            success(error,topic)
+        }
+    })
 }

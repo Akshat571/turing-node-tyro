@@ -1,7 +1,5 @@
 const Article = require('../models/article');
 const User = require('../models/user');
-const Topic = require('../models/topic');
-
 
 module.exports.createArticle = function (title, topics, content, authorId, success) {
     const date = new Date();

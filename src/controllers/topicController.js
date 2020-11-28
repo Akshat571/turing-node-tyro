@@ -1,36 +1,51 @@
-const TopicDao = require("../dao/topicDao");
+const topicDao = require("../dao/topicDao");
+const userDao=require("../dao/userDao")
 
 module.exports.getSimilarTopics = function (topic, callback) {
-    TopicDao.findSimilarTopics(topic, function (error, result) {
+    topicDao.findSimilarTopics(topic, function (error, result) {
         callback(error, result);
     })
 }
 
 module.exports.followTopic = function (topicId, userEmail, callback) {
-    TopicDao.checkIfTopicAlreadyExists(topicId, userEmail, function (error, result) {
-        if (result == null) {
-            callback(error, null);
-        }
-        else {
-            TopicDao.addTopicToPerson(topicId, userEmail, function (error, result) {
-                callback(error, result)
-            })
-        }
-    })
+  topicDao.getTopic(topicId,function(error,topic){
+      if (error){
+          callback(error,null)
+      }else{
+          userDao.getUser(userEmail,function(error,user){
+              if(error){
+                  callback(error,null)
+              }else{
+                  if(checkFollowStatus(user.topics,topicId)){
+                      callback(error,null)
+                  }else{
+                      userDao.addTopic(userEmail,topicId,function(error,user){
+                          callback(error,user)
+                      })
+                  }
+              }
+          })
+          
+      }
+  })
+}
+
+const checkFollowStatus=function(topics,topicId){
+    return topics.includes(topicId);
 }
 
 module.exports.unfollowTopic = function (topicId, userEmail, callback) {
-    TopicDao.removeTopicFromPerson(topicId, userEmail, function (error, result) {
+    topicDao.removeTopicFromPerson(topicId, userEmail, function (error, result) {
         callback(error, result)
     })
 }
 
 module.exports.retriveTopicsByCount = function (count, email, callback) {
-    TopicDao.getTopicsByCount(count, function (error, topics) {
+    topicDao.getTopicsByCount(count, function (error, topics) {
         if (error)
             callback(error, null);
         else {
-            TopicDao.getUserTopics(email, function (error, userTopics) {
+            topicDao.getUserTopics(email, function (error, userTopics) {
                 if (error)
                     callback(error, null);
                 else {
