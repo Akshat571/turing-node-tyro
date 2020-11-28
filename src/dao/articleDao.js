@@ -73,34 +73,6 @@ module.exports.increaseView = function (articleId, success) {
 }
 
 
-
-module.exports.checkIfArticleIsAlreadyLiked = (articleId, userId, callback) => {
-    Article.findOne({ _id: articleId }, function (error, article) {
-        if (article) {
-            var flag = 0
-            for (var i in article.peopleWhoLikedArticle) {
-                if (article.peopleWhoLikedArticle[i].equals(userId)) {
-                    flag = 1;
-                    break;
-                }
-            }
-            if (flag == 0) {
-                callback(null, article)
-            }
-            else {
-                callback(error, null)
-            }
-        } else {
-            callback({
-
-                message: "Couldnt find article"
-
-            }, null, null)
-            return;
-        }
-    });
-}
-
 module.exports.likeArticle = function (userId, articleId, success) {
     Article.findOne({ _id: articleId }, function (error, article) {
         if (error) {
@@ -144,13 +116,17 @@ module.exports.unlikeArticle = (articleId, userId, success) => {
 
 
 }
-
-
-
 module.exports.getArticle = function (articleId, callback) {
     Article.findOne({ _id: articleId }, { __v: 0, views: 0, topics: 0 }).populate({
         path: 'author', select: 'name email _id profilePic'
     }).lean().exec(function (error, article) {
-        callback(error, article)
+        if (error) {
+            callback({
+                message: "Couldnt find article"
+            }, null)
+        } else {
+            callback(error, article)
+        }
+
     })
 }

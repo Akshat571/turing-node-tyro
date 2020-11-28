@@ -96,33 +96,6 @@ module.exports.unfollowAnUser = (userId, userEmail, success) => {
     })
 }
 
-module.exports.checkIfUserAlreadyIsFollowing = (userId, userEmail, callback) => {
-    User.findOne({ email: userEmail }, function (error, user) {
-        if (user) {
-            var flag = 0
-            for (var i in user.peopleFollowing) {
-                if (user.peopleFollowing[i] == userId) {
-                    flag = 1;
-                    break;
-                }
-            }
-            if (flag == 0) {
-                callback(null, user)
-            }
-            else {
-                callback(error, null)
-            }
-        } else {
-            callback({
-                "result": {
-                    message: "Couldnt find topic"
-                }
-            }, null, null)
-            return;
-        }
-    });
-}
-
 module.exports.updateProfilePic = function (email, imgUrl, public_id, callback) {
     const filter = { email: email };
     const update = { $set: { "profilePic.url": imgUrl, "profilePic.public_id": public_id } };

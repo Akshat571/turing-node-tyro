@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const controller = require("../controllers/bookmarkController");
-const { tokenAuthincator } = require("../utils");
+const { tokenAuthenticator } = require("../utils");
 const StatusCodes = require('http-status-codes').StatusCodes;
 
 
 router.put("/add/:id", function (req, res) {
     var articleId = req.params.id;
-    tokenAuthincator(req, res, function (error, verifiedJwt) {
+    tokenAuthenticator(req, res, function (error, verifiedJwt) {
         if (error) {
             return res.status(StatusCodes.UNAUTHORIZED).json({
                 "error": { message: "UNAUTHORIZED" }
@@ -40,7 +40,7 @@ router.put("/add/:id", function (req, res) {
 
 router.put("/remove/:id", function (req, res) {
     var articleId = req.params.id;
-    tokenAuthincator(req, res, function (error, verifiedJwt) {
+    tokenAuthenticator(req, res, function (error, verifiedJwt) {
         if (error) {
             return res.status(StatusCodes.UNAUTHORIZED).json({
                 "error": { message: "UNAUTHORIZED" }
@@ -66,7 +66,7 @@ router.put("/remove/:id", function (req, res) {
 })
 
 router.get("/", function (req, res) {
-    tokenAuthincator(req, res, function (error, verifiedJwt) {
+    tokenAuthenticator(req, res, function (error, verifiedJwt) {
         if (error) {
             return res.status(StatusCodes.UNAUTHORIZED).json({
                 "error": { message: "UNAUTHORIZED" }

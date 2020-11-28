@@ -3,7 +3,7 @@ const router = express.Router();
 const controller = require("../controllers/topicController");
 const { handleResponse, getPayload, verifyToken } = require("../utils");
 const StatusCodes = require('http-status-codes').StatusCodes;
-const { tokenAuthincator } = require("../utils");
+const { tokenAuthenticator } = require("../utils");
 
 router.get('/autocomplete/:topic', function (req, res) {
     const topic = req.params.topic;
@@ -16,7 +16,7 @@ router.get('/autocomplete/:topic', function (req, res) {
 router.put('/follow/:id', function (req, res) {
     const topicId = req.params.id;
     if (topicId != null) {
-        tokenAuthincator(req, res, function (error, verifiedJwt) {
+        tokenAuthenticator(req, res, function (error, verifiedJwt) {
             if (error) {
                 return res.status(StatusCodes.UNAUTHORIZED).json({
                     "error": { message: "UNAUTHORIZED" }
@@ -56,7 +56,7 @@ router.put('/follow/:id', function (req, res) {
 router.put('/unfollow/:id', function (req, res) {
     const topicId = req.params.id;
     if (topicId != null) {
-        tokenAuthincator(req, res, function (error, verifiedJwt) {
+        tokenAuthenticator(req, res, function (error, verifiedJwt) {
             if (error) {
                 return res.status(StatusCodes.UNAUTHORIZED).json({
                     "error": { message: "UNAUTHORIZED" }

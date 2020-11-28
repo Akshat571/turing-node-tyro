@@ -16,41 +16,6 @@ module.exports.findSimilarTopics = (topic, success) => {
     })
 }
 
-
-
-module.exports.removeTopicFromPerson = (topicId, userEmail, success) => {
-    Topic.findOne({ _id: topicId }, function (error, topic) {
-        if (error) {
-            success({
-
-                message: "Couldnt find topic"
-            }, null, null)
-            return;
-        }
-        else {
-            User.findOne({ email: userEmail }, function (error, user) {
-                if (user) {
-                    for (var i in user.topics) {
-                        if (user.topics[i] == topicId) {
-                            user.topics.splice(i, 1);
-                        }
-                    }
-                    user.save(function (error, user) {
-                        success(error, user);
-                    })
-                } else {
-                    success({
-
-                        message: "Couldnt find topic"
-
-                    }, null, null)
-                    return;
-                }
-            });
-        }
-    })
-}
-
 module.exports.getTopicsByCount = function (count, callback) {
     if (count !== undefined) {
         Topic.find({}, { articles: 0, __v: 0 }, { limit: Number(count) }).lean().

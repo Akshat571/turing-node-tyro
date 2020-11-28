@@ -1,5 +1,5 @@
 const topicDao = require("../dao/topicDao");
-const userDao=require("../dao/userDao")
+const userDao = require("../dao/userDao")
 
 module.exports.getSimilarTopics = function (topic, callback) {
     topicDao.findSimilarTopics(topic, function (error, result) {
@@ -8,34 +8,34 @@ module.exports.getSimilarTopics = function (topic, callback) {
 }
 
 module.exports.followTopic = function (topicId, userEmail, callback) {
-  topicDao.getTopic(topicId,function(error,topic){
-      if (error){
-          callback(error,null)
-      }else{
-          userDao.getUser(userEmail,function(error,user){
-              if(error){
-                  callback(error,null)
-              }else{
-                  if(checkFollowStatus(user.topics,topicId)){
-                      callback(error,null)
-                  }else{
-                      userDao.addTopic(userEmail,topicId,function(error,user){
-                          callback(error,user)
-                      })
-                  }
-              }
-          })
-          
-      }
-  })
+    topicDao.getTopic(topicId, function (error, topic) {
+        if (error) {
+            callback(error, null)
+        } else {
+            userDao.getUser(userEmail, function (error, user) {
+                if (error) {
+                    callback(error, null)
+                } else {
+                    if (checkFollowStatus(user.topics, topicId)) {
+                        callback(error, null)
+                    } else {
+                        userDao.addTopic(userEmail, topicId, function (error, user) {
+                            callback(error, user)
+                        })
+                    }
+                }
+            })
+
+        }
+    })
 }
 
-const checkFollowStatus=function(topics,topicId){
+const checkFollowStatus = function (topics, topicId) {
     return topics.includes(topicId);
 }
 
 module.exports.unfollowTopic = function (topicId, userEmail, callback) {
-    topicDao.removeTopicFromPerson(topicId, userEmail, function (error, result) {
+    userDao.removeTopic(userEmail, topicId, function (error, result) {
         callback(error, result)
     })
 }
