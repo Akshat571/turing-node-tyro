@@ -2,7 +2,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const router = express.Router();
 const controller = require("../controllers/userController");
-const { handleResponse, tokenAuthincator } = require("../utils");
+const { handleResponse, tokenAuthenticator } = require("../utils");
 const { tokenGenerator } = require("../utils");
 const StatusCodes = require('http-status-codes').StatusCodes;
 var upload = require('../../config/multer');
@@ -103,7 +103,7 @@ router.post("/login", (req, res) => {
 router.put('/follow/:id', function (req, res) {
   const userId = req.params.id;
   if (userId != null) {
-    tokenAuthincator(req, res, function (error, verifiedJwt) {
+    tokenAuthenticator(req, res, function (error, verifiedJwt) {
       if (error) {
         return res.status(StatusCodes.UNAUTHORIZED).json({
           "error": { message: "UNAUTHORIZED" }
@@ -143,7 +143,7 @@ router.put('/follow/:id', function (req, res) {
 router.put('/unfollow/:id', function (req, res) {
   const userId = req.params.id;
   if (userId != null) {
-    tokenAuthincator(req, res, function (error, verifiedJwt) {
+    tokenAuthenticator(req, res, function (error, verifiedJwt) {
       if (error) {
         return res.status(StatusCodes.UNAUTHORIZED).json({
           "error": { message: "UNAUTHORIZED" }
@@ -179,7 +179,7 @@ cloudinary.config({
 });
 
 router.put('/upload-image', upload.single('profilePic'), function (req, res) {
-  tokenAuthincator(req, res, function (error, verifiedJwt) {
+  tokenAuthenticator(req, res, function (error, verifiedJwt) {
     if (error) {
       return res.status(StatusCodes.UNAUTHORIZED).json({
         "error": { message: "UNAUTHORIZED" }

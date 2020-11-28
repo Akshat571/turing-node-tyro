@@ -44,7 +44,7 @@ function getPayload(bearerHeader) {
   }
 }
 
-module.exports.tokenAuthincator = function (req, res, callback) {
+module.exports.tokenAuthenticator = function (req, res, callback) {
   const bearerHeader = req.headers['authorization'];
   if (bearerHeader == null || bearerHeader == undefined) {
     return res.status(StatusCodes.BAD_REQUEST).json({

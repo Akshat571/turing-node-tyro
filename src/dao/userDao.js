@@ -96,33 +96,6 @@ module.exports.unfollowAnUser = (userId, userEmail, success) => {
     })
 }
 
-module.exports.checkIfUserAlreadyIsFollowing = (userId, userEmail, callback) => {
-    User.findOne({ email: userEmail }, function (error, user) {
-        if (user) {
-            var flag = 0
-            for (var i in user.peopleFollowing) {
-                if (user.peopleFollowing[i] == userId) {
-                    flag = 1;
-                    break;
-                }
-            }
-            if (flag == 0) {
-                callback(null, user)
-            }
-            else {
-                callback(error, null)
-            }
-        } else {
-            callback({
-                "result": {
-                    message: "Couldnt find topic"
-                }
-            }, null, null)
-            return;
-        }
-    });
-}
-
 module.exports.updateProfilePic = function (email, imgUrl, public_id, callback) {
     const filter = { email: email };
     const update = { $set: { "profilePic.url": imgUrl, "profilePic.public_id": public_id } };
@@ -144,6 +117,132 @@ module.exports.getProfilePic = function (email, callback) {
         }
     });
 };
+
+module.exports.setArticlesForUser=function(authorId,articleId,success){
+    User.findOne({_id:authorId},function(error,author){
+        if(error){
+            success(error,null)
+        }else{
+            author.articles.push(articleId);
+            author.save(function(error,user){
+                success(error,user)
+            })
+        }
+    })
+}
+
+module.exports.addBookmark=function(userEmail,articleId,success){
+    User.findOne({ email: userEmail }, function (error, user) {
+        if (error) {
+            success({
+                message: "Couldnt find user"
+            }, null, null)
+            return;
+        } else {
+            user.bookmarkedArticles.push(articleId);
+            user.save(function (error, newUser) {
+                success(error, newUser);
+            })
+
+        }
+    })
+}
+
+module.exports.removeBookmark=function(userEmail,articleId,success){
+    User.findOne({ email: userEmail }, function (error, user) {
+        if (user) {
+            for (var i in user.bookmarkedArticles) {
+                if (user.bookmarkedArticles[i] == articleId) {
+                    user.bookmarkedArticles.splice(i, 1);
+                }
+            }
+            user.save(function (error, user) {
+                success(error, user);
+            })
+        } else {
+            success({
+                "result": {
+                    message: "Couldnt find article"
+                }
+            }, null, null)
+            return;
+        }
+    });
+}
+
+module.exports.getAllBookmarkedArticle = (email, callback) => {
+    User.findOne(
+        {
+            email: email
+        },
+        {
+            _id: 0,
+            __v: 0,
+            name: 0,
+            password: 0,
+            email: 0,
+            articles: 0,
+            topics: 0,
+            profilePic: 0,
+            peopleFollowing: 0,
+            
+        },
+        {}).
+        populate({
+            path: 'bookmarkedArticles', select: 'content title author createdOn _id',
+            populate: {
+                path: 'author', select: 'name email _id profilePic',
+            },
+            options: { sort: { 'createdOn': -1 } }
+        }).
+        exec(function (error, feed) {
+            if (error)
+                callback(error, null);
+            else
+                callback(error, feed);
+
+        })
+}
+
+module.exports.addTopic=function(userEmail,topicId,success){
+    User.findOne({ email: userEmail }, function (error, user) {
+        if (user) {
+            user.topics.push(topicId);
+            user.save(function (error, user) {
+                success(error, user);
+            })
+        } else {
+            success({
+
+                message: "Couldnt find user"
+
+            }, null, null)
+            return;
+        }
+    });
+}
+
+module.exports.removeTopic=function(userEmail,topicId,success){
+    User.findOne({ email: userEmail }, function (error, user) {
+        if (user) {
+            for (var i in user.topics) {
+                if (user.topics[i] == topicId) {
+                    user.topics.splice(i, 1);
+                }
+            }
+            user.save(function (error, user) {
+                success(error, user);
+            })
+        } else {
+            success({
+
+                message: "Couldnt find user"
+
+            }, null, null)
+            return;
+        }
+    });
+}
 
 
 
