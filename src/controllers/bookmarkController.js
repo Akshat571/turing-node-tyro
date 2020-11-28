@@ -11,7 +11,6 @@ module.exports.addBookMark=function(userEmail,articleId,callback){
                 if(error){
                     callback(error,null)
                 }else{
-                    console.log(user)
                     if(checkIfBookmarked(user.bookmarkedArticles,articleId)){
                         callback(error,null)
                     }
@@ -41,4 +40,14 @@ module.exports.removeBookmark=function(userEmail,articleId,callback){
            })
        }
    })
+}
+module.exports.retriveAllBookmarkedArticles = function (email, callback) {
+    userDao.getAllBookmarkedArticle(email, function (error, bookmarkedArticles) {
+        if (error || bookmarkedArticles.length == 0)
+            callback(error, null);
+        else {
+            let articles = bookmarkedArticles.bookmarkedArticles;
+            callback(null, articles)
+        }
+    })
 }

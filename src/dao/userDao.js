@@ -197,5 +197,39 @@ module.exports.removeBookmark=function(userEmail,articleId,success){
     });
 }
 
+module.exports.getAllBookmarkedArticle = (email, callback) => {
+    User.findOne(
+        {
+            email: email
+        },
+        {
+            _id: 0,
+            __v: 0,
+            name: 0,
+            password: 0,
+            email: 0,
+            articles: 0,
+            topics: 0,
+            profilePic: 0,
+            peopleFollowing: 0,
+            
+        },
+        {}).
+        populate({
+            path: 'bookmarkedArticles', select: 'content title author createdOn _id',
+            populate: {
+                path: 'author', select: 'name email _id profilePic',
+            },
+            options: { sort: { 'createdOn': -1 } }
+        }).
+        exec(function (error, feed) {
+            if (error)
+                callback(error, null);
+            else
+                callback(error, feed);
+
+        })
+}
+
 
 

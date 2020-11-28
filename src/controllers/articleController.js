@@ -125,17 +125,6 @@ module.exports.unlikeArticle = function (userEmail, articleId, callback) {
 
 }
 
-module.exports.retriveAllBookmarkedArticles = function (email, callback) {
-    articleDao.getAllBookmarkedArticle(email, function (error, bookmarkedArticles) {
-        if (error || bookmarkedArticles.length == 0)
-            callback(error, null);
-        else {
-            let articles = bookmarkedArticles.bookmarkedArticles;
-            callback(null, articles)
-        }
-    })
-}
-
 module.exports.readArticle = function (userEmail, articleId, callback) {
 
     userDao.getUser(userEmail, function (error, user) {
