@@ -532,7 +532,7 @@
                 }
             }
         },
-        "/article/read": {
+        "/article/read/{articleId}": {
             "get": {
                 "security": [
                     {
@@ -547,6 +547,15 @@
                 "operationId": "read",
                 "produces": [
                     "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "articleId",
+                        "in": "path",
+                        "description": "articleId of article to display",
+                        "required": true,
+                        "type": "string"
+                    }
                 ],
                 "responses": {
                     "200": {
@@ -914,29 +923,24 @@
             }
         },
         "bookmarkedArticle": {
-            "type": "object",
-            "properties": {
-                "bookmarkedArticles": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "_id": {
-                                "type": "string"
-                            },
-                            "author": {
-                                "$ref": "#/definitions/Author"
-                            },
-                            "title": {
-                                "type": "string"
-                            },
-                            "content": {
-                                "type": "string"
-                            },
-                            "createdOn": {
-                                "type": "string"
-                            }
-                        }
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string"
+                    },
+                    "author": {
+                        "$ref": "#/definitions/Author"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "content": {
+                        "type": "string"
+                    },
+                    "createdOn": {
+                        "type": "string"
                     }
                 }
             }
