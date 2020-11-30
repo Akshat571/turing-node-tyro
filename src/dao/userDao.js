@@ -18,7 +18,7 @@ module.exports.getUser = function (email, callback) {
 };
 
 module.exports.getUserByCount = function (count, callback) {
-    let projection = { articles: 0, topics: 0, peopleFollowing: 0, password: 0, __v: 0, bookmarkedArticles: 0 };
+    let projection = { articles: 0, topics: 0, peopleFollowing: 0, password: 0, __v: 0, bookmarkedArticles: 0, bio: 0 };
     if (count !== undefined) {
         User.find({}, projection, { limit: Number(count) }).lean().
             exec(function (error, user) {
@@ -36,9 +36,9 @@ module.exports.followAnUser = (userId, userEmail, success) => {
     User.findOne({ _id: userId }, function (error, existingUser) {
         if (error) {
             success({
-                
-                    message: "Couldnt find user"
-              
+
+                message: "Couldnt find user"
+
             }, null, null)
             return;
         }
@@ -66,9 +66,9 @@ module.exports.unfollowAnUser = (userId, userEmail, success) => {
     User.findOne({ _id: userId }, function (error, exisitingUser) {
         if (error) {
             success({
-               
-                    message: "Couldnt find user"
-               
+
+                message: "Couldnt find user"
+
             }, null, null)
             return;
         }
@@ -118,20 +118,20 @@ module.exports.getProfilePic = function (email, callback) {
     });
 };
 
-module.exports.setArticlesForUser=function(authorId,articleId,success){
-    User.findOne({_id:authorId},function(error,author){
-        if(error){
-            success(error,null)
-        }else{
+module.exports.setArticlesForUser = function (authorId, articleId, success) {
+    User.findOne({ _id: authorId }, function (error, author) {
+        if (error) {
+            success(error, null)
+        } else {
             author.articles.push(articleId);
-            author.save(function(error,user){
-                success(error,user)
+            author.save(function (error, user) {
+                success(error, user)
             })
         }
     })
 }
 
-module.exports.addBookmark=function(userEmail,articleId,success){
+module.exports.addBookmark = function (userEmail, articleId, success) {
     User.findOne({ email: userEmail }, function (error, user) {
         if (error) {
             success({
@@ -148,7 +148,7 @@ module.exports.addBookmark=function(userEmail,articleId,success){
     })
 }
 
-module.exports.removeBookmark=function(userEmail,articleId,success){
+module.exports.removeBookmark = function (userEmail, articleId, success) {
     User.findOne({ email: userEmail }, function (error, user) {
         if (user) {
             for (var i in user.bookmarkedArticles) {
@@ -185,7 +185,7 @@ module.exports.getAllBookmarkedArticle = (email, callback) => {
             topics: 0,
             profilePic: 0,
             peopleFollowing: 0,
-            
+
         },
         {}).
         populate({
@@ -204,7 +204,7 @@ module.exports.getAllBookmarkedArticle = (email, callback) => {
         })
 }
 
-module.exports.addTopic=function(userEmail,topicId,success){
+module.exports.addTopic = function (userEmail, topicId, success) {
     User.findOne({ email: userEmail }, function (error, user) {
         if (user) {
             user.topics.push(topicId);
@@ -222,7 +222,7 @@ module.exports.addTopic=function(userEmail,topicId,success){
     });
 }
 
-module.exports.removeTopic=function(userEmail,topicId,success){
+module.exports.removeTopic = function (userEmail, topicId, success) {
     User.findOne({ email: userEmail }, function (error, user) {
         if (user) {
             for (var i in user.topics) {
@@ -243,6 +243,53 @@ module.exports.removeTopic=function(userEmail,topicId,success){
         }
     });
 }
+
+module.exports.addBio = function (userEmail, bio, success) {
+    User.findOne({ email: userEmail }, function (error, user) {
+        if (error) {
+            success({
+
+                message: "Couldnt find user"
+            }, null, null)
+            return;
+        } else {
+            user.bio = bio;
+            user.save(function (error, updatedUser) {
+                success(error, updatedUser)
+            })
+
+        }
+    })
+}
+module.exports.getUserProfile = function (userId, callback) {
+    User.findById(userId)
+        .select('name email profilePic.url bio articles')
+        .populate({
+            path: 'articles', select: 'title content createdOn'
+        })
+        .exec(function (error, user) {
+            if (error) {
+                callback(error, null);
+            } else {
+                callback(error, user);
+            }
+        })
+};
+
+module.exports.getUserProfileByMail = function (email, callback) {
+    User.findOne({ email: email })
+        .select('name email profilePic.url bio articles')
+        .populate({
+            path: 'articles', select: 'title content createdOn'
+        })
+        .exec(function (error, user) {
+            if (error) {
+                callback(error, null);
+            } else {
+                callback(error, user);
+            }
+        })
+};
 
 
 

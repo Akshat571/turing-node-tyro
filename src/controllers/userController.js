@@ -57,12 +57,12 @@ module.exports.retriveUserByCount = function (count, userEmail, callback) {
 }
 
 module.exports.followUser = function (userId, userEmail, callback) {
-  userDao.getUser(userEmail,function(error,currentUser){
-    if(error){
-      callback(error,null)
-    }else{
-      userDao.followAnUser(userId,userEmail,function(error,user){
-        callback(error,user)
+  userDao.getUser(userEmail, function (error, currentUser) {
+    if (error) {
+      callback(error, null)
+    } else {
+      userDao.followAnUser(userId, userEmail, function (error, user) {
+        callback(error, user)
       })
     }
 
@@ -91,5 +91,28 @@ module.exports.retriveProfilePic = function (email, callback) {
     } else {
       callback(error, doc);
     }
+  })
+}
+
+module.exports.setBio = function (userEmail, bio, callback) {
+  userDao.addBio(userEmail, bio, function (error, user) {
+    callback(error, user)
+  })
+}
+module.exports.retriveUserProfile = function (userId, callback) {
+  userDao.getUserProfile(userId, function (error, user) {
+    if (error)
+      callback(error, null);
+    else
+      callback(error, user);
+  })
+}
+
+module.exports.retriveUserByMail = function (email, callback) {
+  userDao.getUserProfileByMail(email, function (error, user) {
+    if (error)
+      callback(error, null);
+    else
+      callback(error, user);
   })
 }

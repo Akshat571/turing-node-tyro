@@ -6,7 +6,7 @@ const StatusCodes = require('http-status-codes').StatusCodes;
 
 router.post('/createPost', function (req, res) {
     const { title, topics, content } = req.body;
-    if (title !=(null||undefined)  && content != (null||undefined)  && topics != (null||undefined) && topics.length >0 ) {
+    if (title != (null || undefined) && content != (null || undefined) && topics != (null || undefined) && topics.length > 0) {
         tokenAuthenticator(req, res, function (error, verifiedJwt) {
             if (error) {
                 return res.status(StatusCodes.UNAUTHORIZED).json({
@@ -103,7 +103,7 @@ router.put("/view/:id", function (req, res) {
     })
 })
 
-router.put("/like/:id",function(req,res){
+router.put("/like/:id", function (req, res) {
     var articleId = req.params.id;
     tokenAuthenticator(req, res, function (error, verifiedJwt) {
         if (error) {
@@ -118,7 +118,7 @@ router.put("/like/:id",function(req,res){
                         "error": error
                     })
                 } else if (result == null) {
-                   return  res.status(StatusCodes.BAD_REQUEST).json({
+                    return res.status(StatusCodes.BAD_REQUEST).json({
                         error: {
                             "message": "Already liked the article"
                         }
@@ -137,7 +137,7 @@ router.put("/like/:id",function(req,res){
 })
 
 
-router.put("/unlike/:id",function(req,res){
+router.put("/unlike/:id", function (req, res) {
     var articleId = req.params.id;
     tokenAuthenticator(req, res, function (error, verifiedJwt) {
         if (error) {
@@ -152,7 +152,7 @@ router.put("/unlike/:id",function(req,res){
                         "error": error
                     })
                 } else if (result == null) {
-                   return  res.status(StatusCodes.BAD_REQUEST).json({
+                    return res.status(StatusCodes.BAD_REQUEST).json({
                         error: {
                             "message": "Already unliked the article"
                         }
@@ -170,7 +170,7 @@ router.put("/unlike/:id",function(req,res){
 
 })
 
-router.get('/read/:id',function(req,res){
+router.get('/read/:id', function (req, res) {
     var articleId = req.params.id;
     tokenAuthenticator(req, res, function (error, verifiedJwt) {
         if (error) {
@@ -179,12 +179,12 @@ router.get('/read/:id',function(req,res){
             })
         } else {
             var userEmail = verifiedJwt.email;
-            controller.readArticle(userEmail,articleId,function(error,article){
-                if(error){
+            controller.readArticle(userEmail, articleId, function (error, article) {
+                if (error) {
                     return res.status(StatusCodes.BAD_REQUEST).json({
                         "error": error
                     })
-                }else{
+                } else {
                     return res.status(StatusCodes.OK).json({
                         "result": article
                     })
@@ -195,4 +195,4 @@ router.get('/read/:id',function(req,res){
     })
 })
 
-module.exports=router;
+module.exports = router;
