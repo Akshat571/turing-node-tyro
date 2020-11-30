@@ -23,6 +23,9 @@ const UserSchema = new Schema({
       type: String
     }
   },
+  bio: {
+    type: String
+  },
   articles: [{ type: Schema.Types.ObjectId, ref: 'Article' }],
   topics: [{ type: Schema.Types.ObjectId, ref: 'Topic' }],
   peopleFollowing: [{ type: Schema.Types.ObjectId, ref: 'User' }],

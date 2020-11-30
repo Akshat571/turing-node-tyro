@@ -244,5 +244,22 @@ module.exports.removeTopic = function (userEmail, topicId, success) {
     });
 }
 
+module.exports.addBio = function (userEmail, bio, success) {
+    User.findOne({ email: userEmail }, function (error, user) {
+        if (error) {
+            success({
+
+                message: "Couldnt find user"
+            }, null, null)
+            return;
+        } else {
+            user.bio=bio;
+            user.save(function(error,updatedUser){
+                success(error,updatedUser)
+            })
+
+        }
+    })
+}
 
 
