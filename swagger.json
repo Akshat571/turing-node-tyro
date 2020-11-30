@@ -822,7 +822,7 @@
                 "title": {
                     "type": "string"
                 },
-                "topic": {
+                "topics": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/topicId"
