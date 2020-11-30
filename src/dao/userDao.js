@@ -36,9 +36,9 @@ module.exports.followAnUser = (userId, userEmail, success) => {
     User.findOne({ _id: userId }, function (error, existingUser) {
         if (error) {
             success({
-                
-                    message: "Couldnt find user"
-              
+
+                message: "Couldnt find user"
+
             }, null, null)
             return;
         }
@@ -66,9 +66,9 @@ module.exports.unfollowAnUser = (userId, userEmail, success) => {
     User.findOne({ _id: userId }, function (error, exisitingUser) {
         if (error) {
             success({
-               
-                    message: "Couldnt find user"
-               
+
+                message: "Couldnt find user"
+
             }, null, null)
             return;
         }
@@ -118,20 +118,20 @@ module.exports.getProfilePic = function (email, callback) {
     });
 };
 
-module.exports.setArticlesForUser=function(authorId,articleId,success){
-    User.findOne({_id:authorId},function(error,author){
-        if(error){
-            success(error,null)
-        }else{
+module.exports.setArticlesForUser = function (authorId, articleId, success) {
+    User.findOne({ _id: authorId }, function (error, author) {
+        if (error) {
+            success(error, null)
+        } else {
             author.articles.push(articleId);
-            author.save(function(error,user){
-                success(error,user)
+            author.save(function (error, user) {
+                success(error, user)
             })
         }
     })
 }
 
-module.exports.addBookmark=function(userEmail,articleId,success){
+module.exports.addBookmark = function (userEmail, articleId, success) {
     User.findOne({ email: userEmail }, function (error, user) {
         if (error) {
             success({
@@ -148,7 +148,7 @@ module.exports.addBookmark=function(userEmail,articleId,success){
     })
 }
 
-module.exports.removeBookmark=function(userEmail,articleId,success){
+module.exports.removeBookmark = function (userEmail, articleId, success) {
     User.findOne({ email: userEmail }, function (error, user) {
         if (user) {
             for (var i in user.bookmarkedArticles) {
@@ -185,7 +185,7 @@ module.exports.getAllBookmarkedArticle = (email, callback) => {
             topics: 0,
             profilePic: 0,
             peopleFollowing: 0,
-            
+
         },
         {}).
         populate({
@@ -204,7 +204,7 @@ module.exports.getAllBookmarkedArticle = (email, callback) => {
         })
 }
 
-module.exports.addTopic=function(userEmail,topicId,success){
+module.exports.addTopic = function (userEmail, topicId, success) {
     User.findOne({ email: userEmail }, function (error, user) {
         if (user) {
             user.topics.push(topicId);
@@ -222,7 +222,7 @@ module.exports.addTopic=function(userEmail,topicId,success){
     });
 }
 
-module.exports.removeTopic=function(userEmail,topicId,success){
+module.exports.removeTopic = function (userEmail, topicId, success) {
     User.findOne({ email: userEmail }, function (error, user) {
         if (user) {
             for (var i in user.topics) {

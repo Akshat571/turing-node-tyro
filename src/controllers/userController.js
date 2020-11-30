@@ -57,12 +57,12 @@ module.exports.retriveUserByCount = function (count, userEmail, callback) {
 }
 
 module.exports.followUser = function (userId, userEmail, callback) {
-  userDao.getUser(userEmail,function(error,currentUser){
-    if(error){
-      callback(error,null)
-    }else{
-      userDao.followAnUser(userId,userEmail,function(error,user){
-        callback(error,user)
+  userDao.getUser(userEmail, function (error, currentUser) {
+    if (error) {
+      callback(error, null)
+    } else {
+      userDao.followAnUser(userId, userEmail, function (error, user) {
+        callback(error, user)
       })
     }
 
