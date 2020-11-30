@@ -250,32 +250,69 @@ router.put('/upload-image', upload.single('profilePic'), function (req, res) {
   })
 })
 
-router.put('/bio',function(req,res){
-  const bio=req.body.bio;
-  if(bio){
-    tokenAuthenticator(req,res,function(error,verifiedJwt){
-      if(error){
+router.put('/bio', function (req, res) {
+  const bio = req.body.bio;
+  if (bio) {
+    tokenAuthenticator(req, res, function (error, verifiedJwt) {
+      if (error) {
         return res.status(StatusCodes.UNAUTHORIZED).json({
           "error": { message: "UNAUTHORIZED" }
         })
-      }else{
-        const userEmail=verifiedJwt.email;
-        controller.setBio(userEmail,bio,function(error,user){
-          if(error){
-            handleResponse(error,null,res)
-          }else{
-            var result={"result":{
-              message:"Bio updated"
-            }}
-            handleResponse(error,result,res)
+      } else {
+        const userEmail = verifiedJwt.email;
+        controller.setBio(userEmail, bio, function (error, user) {
+          if (error) {
+            handleResponse(error, null, res)
+          } else {
+            var result = {
+              "result": {
+                message: "Bio updated"
+              }
+            }
+            handleResponse(error, result, res)
           }
         })
       }
     })
-  }else{
+  } else {
     return res.status(StatusCodes.NO_CONTENT)
   }
 })
+
+// /users/?userId=? (ObjectID)
+router.get('/view-profile', function (req, res) {
+  tokenAuthenticator(req, res, function (error, verifiedJwt) {
+    if (error) {
+      return res.status(StatusCodes.UNAUTHORIZED).json({
+        error: { message: "UNAUTHORIZED" }
+      })
+    } else {
+      let userId = req.query.userId;
+      if (userId !== undefined) {
+        controller.retriveUserProfile(req.query.userId, function (error, user) {
+          if (error) {
+            return res.status(StatusCodes.UNAUTHORIZED).json({
+              error: { message: "Cannot find the user" }
+            })
+          } else {
+            res.send(user);
+          }
+        })
+      } else {
+        controller.retriveUserByMail(verifiedJwt.email, function (error, user) {
+          if (error) {
+            return res.status(StatusCodes.UNAUTHORIZED).json({
+              error: { message: "Cannot find the user" }
+            })
+          } else {
+            res.send(user);
+          }
+        })
+      }
+    }
+  })
+})
+
 
 
 module.exports = router;

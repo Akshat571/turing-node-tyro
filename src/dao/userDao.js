@@ -253,13 +253,43 @@ module.exports.addBio = function (userEmail, bio, success) {
             }, null, null)
             return;
         } else {
-            user.bio=bio;
-            user.save(function(error,updatedUser){
-                success(error,updatedUser)
+            user.bio = bio;
+            user.save(function (error, updatedUser) {
+                success(error, updatedUser)
             })
 
         }
     })
 }
+module.exports.getUserProfile = function (userId, callback) {
+    User.findById(userId)
+        .select('name email profilePic.url bio articles')
+        .populate({
+            path: 'articles', select: 'title content createdOn'
+        })
+        .exec(function (error, user) {
+            if (error) {
+                callback(error, null);
+            } else {
+                callback(error, user);
+            }
+        })
+};
+
+module.exports.getUserProfileByMail = function (email, callback) {
+    User.findOne({ email: email })
+        .select('name email profilePic.url bio articles')
+        .populate({
+            path: 'articles', select: 'title content createdOn'
+        })
+        .exec(function (error, user) {
+            if (error) {
+                callback(error, null);
+            } else {
+                callback(error, user);
+            }
+        })
+};
+
 
 

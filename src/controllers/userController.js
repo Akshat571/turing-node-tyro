@@ -94,8 +94,25 @@ module.exports.retriveProfilePic = function (email, callback) {
   })
 }
 
-module.exports.setBio=function(userEmail,bio,callback){
-  userDao.addBio(userEmail,bio,function(error,user){
-    callback(error,user)
+module.exports.setBio = function (userEmail, bio, callback) {
+  userDao.addBio(userEmail, bio, function (error, user) {
+    callback(error, user)
+  })
+}
+module.exports.retriveUserProfile = function (userId, callback) {
+  userDao.getUserProfile(userId, function (error, user) {
+    if (error)
+      callback(error, null);
+    else
+      callback(error, user);
+  })
+}
+
+module.exports.retriveUserByMail = function (email, callback) {
+  userDao.getUserProfileByMail(email, function (error, user) {
+    if (error)
+      callback(error, null);
+    else
+      callback(error, user);
   })
 }
