@@ -6,6 +6,8 @@ const { handleResponse, tokenAuthenticator } = require("../utils");
 const { tokenGenerator } = require("../utils");
 const StatusCodes = require('http-status-codes').StatusCodes;
 var upload = require('../../config/multer');
+const e = require("express");
+const { result } = require("lodash");
 const cloudinary = require('cloudinary').v2;
 
 router.post('/signup', function (req, res) {
@@ -246,6 +248,33 @@ router.put('/upload-image', upload.single('profilePic'), function (req, res) {
       })
     }
   })
+})
+
+router.put('/bio',function(req,res){
+  const bio=req.body.bio;
+  if(bio){
+    tokenAuthenticator(req,res,function(error,verifiedJwt){
+      if(error){
+        return res.status(StatusCodes.UNAUTHORIZED).json({
+          "error": { message: "UNAUTHORIZED" }
+        })
+      }else{
+        const userEmail=verifiedJwt.email;
+        controller.setBio(userEmail,bio,function(error,user){
+          if(error){
+            handleResponse(error,null,res)
+          }else{
+            var result={"result":{
+              message:"Bio updated"
+            }}
+            handleResponse(error,result,res)
+          }
+        })
+      }
+    })
+  }else{
+    return res.status(StatusCodes.NO_CONTENT)
+  }
 })
 
 

@@ -93,3 +93,9 @@ module.exports.retriveProfilePic = function (email, callback) {
     }
   })
 }
+
+module.exports.setBio=function(userEmail,bio,callback){
+  userDao.addBio(userEmail,bio,function(error,user){
+    callback(error,user)
+  })
+}
