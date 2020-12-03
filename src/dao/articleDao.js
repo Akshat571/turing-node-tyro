@@ -1,5 +1,6 @@
 const Article = require('../models/article');
 const User = require('../models/user');
+const Notification = require('../models/notification');
 
 module.exports.createArticle = function (title, topics, content, authorId, success) {
     const date = new Date();
@@ -73,7 +74,7 @@ module.exports.increaseView = function (articleId, success) {
 }
 
 
-module.exports.likeArticle = function (userId, articleId, success) {
+module.exports.likeArticle = function (userId, articleId, userEmail, success) {
     Article.findOne({ _id: articleId }, function (error, article) {
         if (error) {
             success({
@@ -86,11 +87,40 @@ module.exports.likeArticle = function (userId, articleId, success) {
             article.save(function (error, newArticle) {
                 success(error, newArticle);
             })
-
         }
     })
-
-
+    User.findOne({ email: userEmail }).exec(function (error, likedUser) {
+        Article.findOne({ _id: articleId },
+            {
+                topics: 0,
+                peopleWhoLikedArticle: 0,
+                _id: 0,
+                content: 0,
+                views: 0,
+                createdOn: 0,
+                __v: 0,
+                noOfLikes: 0
+            })
+            .populate({
+                path: 'author', select: 'name email profilePic.url -_id'
+            }).exec(function (error, likedArticleAuthor) {
+                var notificationObj = {
+                    "message": likedUser.name + " liked your article, " + likedArticleAuthor.title,
+                    "userProfilePic": likedArticleAuthor.author.profilePic.url,
+                    "hasSeen": false
+                }
+                Notification.updateOne({
+                    email: likedArticleAuthor.author.email
+                },
+                    {
+                        $push: {
+                            notification: notificationObj
+                        }
+                    })
+                    .exec(function (error, result) {
+                    })
+            })
+    })
 
 }
 

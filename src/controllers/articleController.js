@@ -85,14 +85,14 @@ module.exports.likeArticle = function (userEmail, articleId, callback) {
                     callback(error, null)
                 } else {
                     const userId = user._id;
-                    if (checkLikeStatus(article.peopleWhoLikedArticle,userId)) {
-                        callback(error,null);
-                     }
-                     else{
-                         articleDao.likeArticle(userId,articleId,function(error,article){
-                             callback(error,article)
-                         })
-                     }
+                    if (checkLikeStatus(article.peopleWhoLikedArticle, userId)) {
+                        callback(error, null);
+                    }
+                    else {
+                        articleDao.likeArticle(userId, articleId, userEmail, function (error, article) {
+                            callback(error, article)
+                        })
+                    }
 
                 }
             })
@@ -102,12 +102,12 @@ module.exports.likeArticle = function (userEmail, articleId, callback) {
 }
 
 const checkLikeStatus = function (users, userId) {
-    for(var i=0;i<users.length;i++){
-        if(users[i].equals(userId)){
+    for (var i = 0; i < users.length; i++) {
+        if (users[i].equals(userId)) {
             return true;
         }
     }
-    
+
 }
 
 module.exports.unlikeArticle = function (userEmail, articleId, callback) {
