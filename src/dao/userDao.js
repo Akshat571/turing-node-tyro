@@ -32,7 +32,7 @@ module.exports.getUserByCount = function (count, callback) {
     }
 }
 
-module.exports.followAnUser = (userId, userEmail, success) => {
+module.exports.followUser = (userId, userEmail, success) => {
     User.findOne({ _id: userId }, function (error, existingUser) {
         if (error) {
             success({

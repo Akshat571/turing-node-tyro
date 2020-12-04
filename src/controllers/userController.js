@@ -57,16 +57,28 @@ module.exports.retriveUserByCount = function (count, userEmail, callback) {
 }
 
 module.exports.followUser = function (userId, userEmail, callback) {
-  userDao.getUser(userEmail,function(error,currentUser){
-    if(error){
-      callback(error,null)
-    }else{
-      userDao.followAnUser(userId,userEmail,function(error,user){
-        callback(error,user)
-      })
+  userDao.getUser(userEmail, function (error, currentUser) {
+    if (error) {
+      callback(error, null)
+    } else {
+      if (checkFollowStatus(currentUser.peopleFollowing, userId)) {
+        callback(error, null)
+      }
+      else {
+        userDao.followUser(userId, userEmail, function (error, user) {
+          callback(error, user)
+        })
+      }
     }
 
   })
+}
+const checkFollowStatus = function (users, userId) {
+  for (var i = 0; i < users.length; i++) {
+    if (users[i].equals(userId)) {
+      return true;
+    }
+  }
 }
 
 module.exports.unfollowUser = function (userId, userEmail, callback) {
@@ -94,8 +106,8 @@ module.exports.retriveProfilePic = function (email, callback) {
   })
 }
 
-module.exports.setBio=function(userEmail,bio,callback){
-  userDao.addBio(userEmail,bio,function(error,user){
-    callback(error,user)
+module.exports.setBio = function (userEmail, bio, callback) {
+  userDao.addBio(userEmail, bio, function (error, user) {
+    callback(error, user)
   })
 }
