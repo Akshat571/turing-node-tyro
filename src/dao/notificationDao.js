@@ -1,3 +1,4 @@
+const article = require('../models/article');
 const { functions, result } = require('lodash');
 const Notification = require('../models/notification');
 const User = require('../models/user');
@@ -11,6 +12,28 @@ module.exports.getAllNotifications = (email, callback) => {
     })
 }
 
+module.exports.notifyAll = (users, notificationObject, callback) => {
+    Notification.find({
+        email: { $in: users }
+    }, function (error, notifications) {
+        if (error) {
+            callback({
+                message: "Couldnt find topic"
+            }, null)
+            return;
+        }else{
+            Notification.updateMany(
+                { email: { $in: users } },
+                { $push: { notification: notificationObject } }
+            ).exec(
+                function (error, result) {
+                }
+            )
+            callback(error,notifications)
+        }
+    })
+
+}
 module.exports.notifyFollowers = (authorId, title) => {
     User.findOne({ _id: authorId }, 'followers name profilePic.url').exec(
         function (error, author) {

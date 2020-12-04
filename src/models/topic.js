@@ -6,6 +6,7 @@ const TopicSchema = new Schema({
         required: true,
     },
     articles: [{ type: Schema.Types.ObjectId, ref: 'Article' }],
+    followers:[{ type:String}]
 });
 
 module.exports = mongoose.model("Topic", TopicSchema);

@@ -104,6 +104,7 @@ module.exports.likeArticle = function (userId, articleId, userEmail, success) {
             .populate({
                 path: 'author', select: 'name email profilePic.url -_id'
             }).exec(function (error, likedArticleAuthor) {
+                const date = new Date();
                 var notificationObj = {
                     "message": likedUser.name + " liked your article, " + likedArticleAuthor.title,
                     "userProfilePic": likedArticleAuthor.author.profilePic.url,
