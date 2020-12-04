@@ -20,7 +20,13 @@ module.exports.followTopic = function (topicId, userEmail, callback) {
                         callback(error, null)
                     } else {
                         userDao.addTopic(userEmail, topicId, function (error, user) {
-                            callback(error, user)
+                            if (user) {
+                                topicDao.addUser(topicId, userEmail, function (error, topic) {
+                                    callback(error, user)
+                                })
+                            } else {
+                                callback(error, user)
+                            }
                         })
                     }
                 }
@@ -36,8 +42,14 @@ const checkFollowStatus = function (topics, topicId) {
 
 module.exports.unfollowTopic = function (topicId, userEmail, callback) {
     userDao.removeTopic(userEmail, topicId, function (error, result) {
-        callback(error, result)
-    })
+        if(result){
+            topicDao.removeUser(userEmail,topicId,function(error,result){
+                callback(error, result)
+            })
+        }else{
+            callback(error, result)
+        }
+     })
 }
 
 module.exports.retriveTopicsByCount = function (count, email, callback) {

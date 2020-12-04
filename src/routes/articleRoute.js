@@ -3,6 +3,8 @@ const router = express.Router();
 const controller = require("../controllers/articleController");
 const { tokenAuthenticator } = require("../utils");
 const StatusCodes = require('http-status-codes').StatusCodes;
+const notificationController = require("../controllers/notificationController");
+const e = require("express");
 
 router.post('/createPost', function (req, res) {
     const { title, topics, content } = req.body;
@@ -20,9 +22,19 @@ router.post('/createPost', function (req, res) {
                             "error": { message: "BADREQUEST " }
                         })
                     } else {
-                        return res.status(StatusCodes.CREATED).json({
-                            result: {
-                                "message": "post published"
+                        notificationController.saveTopicNotification(article, function (error, notification) {
+                            if (error) {
+                                return res.status(StatusCodes.OK).json({
+                                    error: {
+                                        "message": error
+                                    }
+                                })
+                            } else {
+                                return res.status(StatusCodes.CREATED).json({
+                                    result: {
+                                        "message": "post published"
+                                    }
+                                })
                             }
                         })
                     }

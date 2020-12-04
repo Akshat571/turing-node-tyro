@@ -1,9 +1,13 @@
 const User = require("../models/user");
+const Notification = require('../models/notification');
 
 module.exports.createUser = function (name, email, password, success) {
     var user = new User({ name, email, password });
     user.save(function (error, newUser) {
         success(error, newUser);
+    });
+    var notificationUser = new Notification({ email });
+    notificationUser.save(function (error, newUser) {
     });
 };
 
@@ -58,6 +62,9 @@ module.exports.followUser = (userId, userEmail, success) => {
                     return;
                 }
             });
+            User.updateOne({ _id: userId }, { $push: { followers: userEmail } })
+                .exec(function (error, result) {
+                });
         }
     })
 }
@@ -83,6 +90,9 @@ module.exports.unfollowAnUser = (userId, userEmail, success) => {
                     user.save(function (error, user) {
                         success(error, user);
                     })
+                    User.updateOne({ _id: userId }, { $pull: { "followers": userEmail } })
+                        .exec(function (error, result) {
+                        });
                 } else {
                     success({
                         "result": {
