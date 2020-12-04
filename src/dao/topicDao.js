@@ -72,3 +72,19 @@ module.exports.getTopic=function(topicId,success){
         }
     })
 }
+
+module.exports.getTopics = function (topics,  success) {
+    Topic.find({
+        _id: { $in: topics }}, function(error, result) {
+            if (error) {
+                success({
+                    message: "Couldnt find topic"
+                }, null, null)
+                return;
+            } else {
+                success(error, result)
+            }
+        }
+    )
+
+}

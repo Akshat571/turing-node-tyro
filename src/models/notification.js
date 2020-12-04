@@ -10,7 +10,8 @@ const NotificationSchema = new Schema({
     notification: [{
         message: String,
         userProfilePic: String,
-        hasSeen: Boolean
+        hasSeen: Boolean,
+        createdOn: { type: Date }
     }]
 });
 
