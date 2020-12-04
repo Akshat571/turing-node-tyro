@@ -22,7 +22,7 @@ module.exports.getUser = function (email, callback) {
 };
 
 module.exports.getUserByCount = function (count, callback) {
-    let projection = { articles: 0, topics: 0, peopleFollowing: 0, password: 0, __v: 0, bookmarkedArticles: 0, bio: 0 };
+    let projection = { articles: 0, topics: 0, peopleFollowing: 0, password: 0, __v: 0, bookmarkedArticles: 0, bio: 0, followers: 0 };
     if (count !== undefined) {
         User.find({}, projection, { limit: Number(count) }).lean().
             exec(function (error, user) {
