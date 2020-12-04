@@ -90,6 +90,9 @@ module.exports.unfollowAnUser = (userId, userEmail, success) => {
                     user.save(function (error, user) {
                         success(error, user);
                     })
+                    User.updateOne({ _id: userId }, { $pull: { "followers": userEmail } })
+                        .exec(function (error, result) {
+                        });
                 } else {
                     success({
                         "result": {
