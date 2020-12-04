@@ -21,7 +21,7 @@ module.exports.notifyAll = (users, notificationObject, callback) => {
                 message: "Couldnt find topic"
             }, null)
             return;
-        }else{
+        } else {
             Notification.updateMany(
                 { email: { $in: users } },
                 { $push: { notification: notificationObject } }
@@ -29,7 +29,7 @@ module.exports.notifyAll = (users, notificationObject, callback) => {
                 function (error, result) {
                 }
             )
-            callback(error,notifications)
+            callback(error, notifications)
         }
     })
 
