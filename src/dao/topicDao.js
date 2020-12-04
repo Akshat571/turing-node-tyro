@@ -99,6 +99,15 @@ module.exports.addUser=function(topicId,userEmail,success){
         }else{
             topic.followers.push(userEmail);
             topic.save();
+            success(error,topic)
         }
     })
+}
+
+module.exports.removeUser=function(userEmail,topicId,callback){
+    Topic.updateOne({ _id: topicId }, { $pull: { "followers": userEmail } })
+    .exec(function (error, result) {
+        callback(error,result)
+    });
+    
 }

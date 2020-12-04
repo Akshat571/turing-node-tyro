@@ -26,7 +26,6 @@ module.exports.saveTopicNotification = function (article, callback) {
                     callback(error, null)
                 } else {
                     for (var i = 0; i < resultTopics.length; i++) {
-                        console.log("result-->", resultTopics[i])
                         notifyUser(resultTopics[i], newArticle, function (error, result) {
                             if (error) {
                                 callback(error, null)
@@ -51,9 +50,7 @@ const notifyUser = function (topic, article, callback) {
         "hasSeen": false,
         "createdOn": date
     }
-    console.log("user-->",topic.followers)
     notificationDao.notifyAll(topic.followers, notificationObj, function (error, notifications) {
-        console.log("notification-->",notifications)
         callback(error, notifications)
     })
 }

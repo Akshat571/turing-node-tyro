@@ -22,11 +22,13 @@ module.exports.notifyAll = (users, notificationObject, callback) => {
             }, null)
             return;
         }else{
-            for(var i=0;i<notifications.length;i++){
-                notifications[i].notification.push(notificationObject)
-                notifications[i].save();
-                console.log("dao-->",notifications[i])
-            }
+            Notification.updateMany(
+                { email: { $in: users } },
+                { $push: { notification: notificationObject } }
+            ).exec(
+                function (error, result) {
+                }
+            )
             callback(error,notifications)
         }
     })
