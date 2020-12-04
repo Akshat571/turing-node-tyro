@@ -81,14 +81,7 @@ const checkFollowStatus = function (users, userId) {
   }
 }
 
-const checkFollowStatus = function (users, userId) {
-  for (var i = 0; i < users.length; i++) {
-    if (users[i].equals(userId)) {
-      return true;
-    }
-  }
 
-}
 
 module.exports.unfollowUser = function (userId, userEmail, callback) {
   userDao.unfollowAnUser(userId, userEmail, function (error, result) {
