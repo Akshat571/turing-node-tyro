@@ -1,6 +1,7 @@
 const articleDao = require("../dao/articleDao");
 const userDao = require("../dao/userDao");
-const topicDao = require("../dao/topicDao")
+const topicDao = require("../dao/topicDao");
+const notificationDao = require("../dao/notificationDao")
 
 module.exports.publishPost = function (title, topics, content, author, callback) {
     userDao.getUser(author, function (error, user) {
@@ -20,6 +21,7 @@ module.exports.publishPost = function (title, topics, content, author, callback)
                                 if (error) {
                                     callback(error, null);
                                 } else {
+                                    notificationDao.notifyFollowers(authorId, title);
                                     callback(error, newArticle);
                                 }
                             })
@@ -85,14 +87,14 @@ module.exports.likeArticle = function (userEmail, articleId, callback) {
                     callback(error, null)
                 } else {
                     const userId = user._id;
-                    if (checkLikeStatus(article.peopleWhoLikedArticle,userId)) {
-                        callback(error,null);
-                     }
-                     else{
-                         articleDao.likeArticle(userId,articleId,function(error,article){
-                             callback(error,article)
-                         })
-                     }
+                    if (checkLikeStatus(article.peopleWhoLikedArticle, userId)) {
+                        callback(error, null);
+                    }
+                    else {
+                        articleDao.likeArticle(userId, articleId, userEmail, function (error, article) {
+                            callback(error, article)
+                        })
+                    }
 
                 }
             })
@@ -102,12 +104,12 @@ module.exports.likeArticle = function (userEmail, articleId, callback) {
 }
 
 const checkLikeStatus = function (users, userId) {
-    for(var i=0;i<users.length;i++){
-        if(users[i].equals(userId)){
+    for (var i = 0; i < users.length; i++) {
+        if (users[i].equals(userId)) {
             return true;
         }
     }
-    
+
 }
 
 module.exports.unlikeArticle = function (userEmail, articleId, callback) {
