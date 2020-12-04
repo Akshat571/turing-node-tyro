@@ -88,3 +88,17 @@ module.exports.getTopics = function (topics,  success) {
     )
 
 }
+
+module.exports.addUser=function(topicId,userEmail,success){
+    Topic.findOne({_id:topicId},function(error,topic){
+        if(error){
+            success({
+                message: "Couldnt find topic"
+            }, null, null)
+            return;
+        }else{
+            topic.followers.push(userEmail);
+            topic.save();
+        }
+    })
+}

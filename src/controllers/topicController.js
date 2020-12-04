@@ -20,7 +20,13 @@ module.exports.followTopic = function (topicId, userEmail, callback) {
                         callback(error, null)
                     } else {
                         userDao.addTopic(userEmail, topicId, function (error, user) {
-                            callback(error, user)
+                            if (user) {
+                                topicDao.addUser(topicId, userEmail, function (error, topic) {
+                                    callback(error, user)
+                                })
+                            } else {
+                                callback(error, user)
+                            }
                         })
                     }
                 }

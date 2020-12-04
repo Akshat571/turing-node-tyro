@@ -62,6 +62,9 @@ module.exports.followAnUser = (userId, userEmail, success) => {
                     return;
                 }
             });
+            User.updateOne({ _id: userId }, { $push: { followers: userEmail } })
+                .exec(function (error, result) {
+                });
         }
     })
 }

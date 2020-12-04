@@ -21,7 +21,6 @@ module.exports.saveTopicNotification = function (article, callback) {
         if (error) {
             callback(error, null)
         } else {
-            console.log("Article in saveTopic-->", newArticle)
             topicDao.getTopics(article.topics, function (error, resultTopics) {
                 if (error) {
                     callback(error, null)

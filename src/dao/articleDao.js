@@ -109,7 +109,7 @@ module.exports.likeArticle = function (userId, articleId, userEmail, success) {
                     "message": likedUser.name + " liked your article, " + likedArticleAuthor.title,
                     "userProfilePic": likedArticleAuthor.author.profilePic.url,
                     "hasSeen": false,
-                    "createdOn":date
+                    "createdOn": date
                 }
                 Notification.updateOne({
                     email: likedArticleAuthor.author.email
