@@ -18,7 +18,7 @@ module.exports.getUser = function (email, callback) {
 };
 
 module.exports.getUserByCount = function (count, callback) {
-    let projection = { articles: 0, topics: 0, peopleFollowing: 0, password: 0, __v: 0, bookmarkedArticles: 0 };
+    let projection = { articles: 0, topics: 0, peopleFollowing: 0, password: 0, __v: 0, bookmarkedArticles: 0, bio: 0 };
     if (count !== undefined) {
         User.find({}, projection, { limit: Number(count) }).lean().
             exec(function (error, user) {
@@ -253,13 +253,43 @@ module.exports.addBio = function (userEmail, bio, success) {
             }, null, null)
             return;
         } else {
-            user.bio=bio;
-            user.save(function(error,updatedUser){
-                success(error,updatedUser)
+            user.bio = bio;
+            user.save(function (error, updatedUser) {
+                success(error, updatedUser)
             })
 
         }
     })
 }
+module.exports.getUserProfile = function (userId, callback) {
+    User.findById(userId)
+        .select('name email profilePic.url bio articles')
+        .populate({
+            path: 'articles', select: 'title content createdOn'
+        })
+        .exec(function (error, user) {
+            if (error) {
+                callback(error, null);
+            } else {
+                callback(error, user);
+            }
+        })
+};
+
+module.exports.getUserProfileByMail = function (email, callback) {
+    User.findOne({ email: email })
+        .select('name email profilePic.url bio articles')
+        .populate({
+            path: 'articles', select: 'title content createdOn'
+        })
+        .exec(function (error, user) {
+            if (error) {
+                callback(error, null);
+            } else {
+                callback(error, user);
+            }
+        })
+};
+
 
 
