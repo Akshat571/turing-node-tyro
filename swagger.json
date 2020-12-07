@@ -31,6 +31,9 @@
         },
         {
             "name": "bookmarks"
+        },
+        {
+            "name": "notification"
         }
     ],
     "schemes": [
@@ -799,6 +802,75 @@
                     }
                 }
             }
+        },
+        "/notifications": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": [
+                    "notification"
+                ],
+                "summary": "Get new notifications",
+                "operationId": "getNotifications",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Each notification in the array has the following fields:\n 1._id:id of the notification.\n2.userProfilePic:Profile picture of the author of the article.\n 3.hasSeen:status to determine if user has seen the notification.\n 4.createdOn:when someone liked the artilce/ when article was published.\n5.message: three types :\n* if someone liked the user's artilce:USERNAME liked your article, ARTICLE TITLE. \n* If a user who you are following posts an artilce:USERNAME published an article, ARTICLE TITLE. \n* If there is new article that falls under a topic you follow:There is a new article in a topic that you follow TOPIC NAME , ARTICLE NAME.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/notification"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notifications/clear": {
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": [
+                    "notification"
+                ],
+                "summary": "Delete the seen notifications",
+                "description": "",
+                "operationId": "",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "articleId",
+                        "in": "body",
+                        "description": "array of notificationId of the notifications to be deleted",
+                        "required": true,
+                        "type": "application/json",
+                        "schema": {
+                            "$ref": "#/definitions/notificationBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Notification Cleared"
+                    },
+                    "204": {
+                        "description": "Empty Request Body/ Fields missing"
+                    },
+                    "401": {
+                        "description": "unauthorized/ Notification dosen't exists"
+                    }
+                }
+            }
         }
     },
     "securityDefinitions": {
@@ -1115,6 +1187,41 @@
             },
             "xml": {
                 "name": "readAuthor"
+            }
+        },
+        "notification": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string"
+                },
+                "userProfilePic": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "hasSeen": {
+                    "type": "boolean"
+                },
+                "createdOn": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "notificationBody": {
+            "type": "object",
+            "properties": {
+                "notification": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
             }
         }
     }
