@@ -44,9 +44,14 @@ module.exports.saveTopicNotification = function (article, callback) {
 
 const notifyUser = function (topic, article, callback) {
     const date = new Date();
+    if (article.author.profilePic === undefined) {
+        var pic = null;
+    } else {
+        pic = article.author.profilePic.url;
+    }
     var notificationObj = {
         "message": "There is a new article in a topic that you follow, " + topic.topicName + " , " + article.title,
-        "userProfilePic": article.author.profilePic.url,
+        "userProfilePic": pic,
         "hasSeen": false,
         "createdOn": date
     }
