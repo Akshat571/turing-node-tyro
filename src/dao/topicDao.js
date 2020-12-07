@@ -18,12 +18,12 @@ module.exports.findSimilarTopics = (topic, success) => {
 
 module.exports.getTopicsByCount = function (count, callback) {
     if (count !== undefined) {
-        Topic.find({}, { articles: 0, __v: 0 }, { limit: Number(count) }).lean().
+        Topic.find({}, { articles: 0, __v: 0, followers: 0 }, { limit: Number(count) }).lean().
             exec(function (error, topics) {
                 callback(error, topics);
             })
     } else {
-        Topic.find({}, { articles: 0, __v: 0 }).lean().
+        Topic.find({}, { articles: 0, __v: 0, followers: 0 }).lean().
             exec(function (error, topics) {
                 callback(error, topics);
             })
@@ -42,72 +42,74 @@ module.exports.getUserTopics = (email, callback) => {
 
 module.exports.setArticleForTopics = function (topics, articleId, success) {
     Topic.find({
-        _id: { $in: topics }}, function(error, result) {
-            if (error) {
-                success({
-                    message: "Couldnt find topic"
-                }, null, null)
-                return;
-            } else {
-                for (var i = 0; i < result.length; i++) {
-                    result[i].articles.push(articleId);
-                    result[i].save();
-                }
-                success(error, result)
-            }
-        }
-    )
-
-}
-
-module.exports.getTopic=function(topicId,success){
-    Topic.findOne({_id:topicId},function(error,topic){
-        if(error){
+        _id: { $in: topics }
+    }, function (error, result) {
+        if (error) {
             success({
                 message: "Couldnt find topic"
             }, null, null)
             return;
-        }else{
-            success(error,topic)
+        } else {
+            for (var i = 0; i < result.length; i++) {
+                result[i].articles.push(articleId);
+                result[i].save();
+            }
+            success(error, result)
+        }
+    }
+    )
+
+}
+
+module.exports.getTopic = function (topicId, success) {
+    Topic.findOne({ _id: topicId }, function (error, topic) {
+        if (error) {
+            success({
+                message: "Couldnt find topic"
+            }, null, null)
+            return;
+        } else {
+            success(error, topic)
         }
     })
 }
 
-module.exports.getTopics = function (topics,  success) {
+module.exports.getTopics = function (topics, success) {
     Topic.find({
-        _id: { $in: topics }}, function(error, result) {
-            if (error) {
-                success({
-                    message: "Couldnt find topic"
-                }, null, null)
-                return;
-            } else {
-                success(error, result)
-            }
-        }
-    )
-
-}
-
-module.exports.addUser=function(topicId,userEmail,success){
-    Topic.findOne({_id:topicId},function(error,topic){
-        if(error){
+        _id: { $in: topics }
+    }, function (error, result) {
+        if (error) {
             success({
                 message: "Couldnt find topic"
             }, null, null)
             return;
-        }else{
+        } else {
+            success(error, result)
+        }
+    }
+    )
+
+}
+
+module.exports.addUser = function (topicId, userEmail, success) {
+    Topic.findOne({ _id: topicId }, function (error, topic) {
+        if (error) {
+            success({
+                message: "Couldnt find topic"
+            }, null, null)
+            return;
+        } else {
             topic.followers.push(userEmail);
             topic.save();
-            success(error,topic)
+            success(error, topic)
         }
     })
 }
 
-module.exports.removeUser=function(userEmail,topicId,callback){
+module.exports.removeUser = function (userEmail, topicId, callback) {
     Topic.updateOne({ _id: topicId }, { $pull: { "followers": userEmail } })
-    .exec(function (error, result) {
-        callback(error,result)
-    });
-    
+        .exec(function (error, result) {
+            callback(error, result)
+        });
+
 }
