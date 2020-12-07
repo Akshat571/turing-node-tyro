@@ -59,3 +59,15 @@ const notifyUser = function (topic, article, callback) {
         callback(error, notifications)
     })
 }
+
+module.exports.clearNotification=(userEmail,notifications,callback)=>{
+    notificationDao.getAllNotifications(userEmail,function(error,newNotifications){
+        if(error){
+            callback(error,null);
+        }else{
+        notificationDao.deleteNotifications(userEmail,notifications,function(error,notifications){
+            callback(error,notifications)
+        })
+        }
+    })
+}

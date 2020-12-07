@@ -1,22 +1,22 @@
 const articleDao = require("../dao/articleDao");
 const userDao = require("../dao/userDao");
-const topicDao=require("../dao/topicDao")
+const topicDao = require("../dao/topicDao")
 
-module.exports.addBookMark=function(userEmail,articleId,callback){
-    userDao.getUser(userEmail,function(error,user){
-        if (error){
-            callback(error,null)
-        }else{
-            articleDao.getArticle(articleId,function(error,article){
-                if(error){
-                    callback(error,null)
-                }else{
-                    if(checkIfBookmarked(user.bookmarkedArticles,articleId)){
-                        callback(error,null)
+module.exports.addBookMark = function (userEmail, articleId, callback) {
+    userDao.getUser(userEmail, function (error, user) {
+        if (error) {
+            callback(error, null)
+        } else {
+            articleDao.getArticle(articleId, function (error, article) {
+                if (error) {
+                    callback(error, null)
+                } else {
+                    if (checkIfBookmarked(user.bookmarkedArticles, articleId)) {
+                        callback(error, null)
                     }
-                    else{
-                        userDao.addBookmark(userEmail,articleId,function(error,updatedUser){
-                            callback(error,updatedUser)
+                    else {
+                        userDao.addBookmark(userEmail, articleId, function (error, updatedUser) {
+                            callback(error, updatedUser)
                         })
                     }
                 }
@@ -25,21 +25,21 @@ module.exports.addBookMark=function(userEmail,articleId,callback){
     })
 }
 
-checkIfBookmarked=function(articlesBookmarked,articleId){
+checkIfBookmarked = function (articlesBookmarked, articleId) {
     return articlesBookmarked.includes(articleId);
 
 }
 
-module.exports.removeBookmark=function(userEmail,articleId,callback){
-   articleDao.getArticle(articleId,function(error,article){
-       if(error){
-           callback(error,null)
-       }else{
-           userDao.removeBookmark(userEmail,articleId,function(error,user){
-               callback(error,user)
-           })
-       }
-   })
+module.exports.removeBookmark = function (userEmail, articleId, callback) {
+    articleDao.getArticle(articleId, function (error, article) {
+        if (error) {
+            callback(error, null)
+        } else {
+            userDao.removeBookmark(userEmail, articleId, function (error, user) {
+                callback(error, user)
+            })
+        }
+    })
 }
 module.exports.retriveAllBookmarkedArticles = function (email, callback) {
     userDao.getAllBookmarkedArticle(email, function (error, bookmarkedArticles) {

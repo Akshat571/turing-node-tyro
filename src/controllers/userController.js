@@ -62,9 +62,10 @@ module.exports.followUser = function (userId, userEmail, callback) {
       callback(error, null)
     } else {
       if (checkFollowStatus(currentUser.peopleFollowing, userId)) {
-        callback(error, null);
-      } else {
-        userDao.followAnUser(userId, userEmail, function (error, user) {
+        callback(error, null)
+      }
+      else {
+        userDao.followUser(userId, userEmail, function (error, user) {
           callback(error, user)
         })
       }
@@ -72,15 +73,15 @@ module.exports.followUser = function (userId, userEmail, callback) {
 
   })
 }
-
 const checkFollowStatus = function (users, userId) {
   for (var i = 0; i < users.length; i++) {
     if (users[i].equals(userId)) {
       return true;
     }
   }
-
 }
+
+
 
 module.exports.unfollowUser = function (userId, userEmail, callback) {
   userDao.unfollowAnUser(userId, userEmail, function (error, result) {
