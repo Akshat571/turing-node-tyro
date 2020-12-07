@@ -255,6 +255,80 @@
                 }
             }
         },
+        "/user/view-profile": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get the user profile related data",
+                "operationId": "viewProfile",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "query",
+                        "description": "if userId is not provided in query then data related to logged in user will be listed",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/viewProfileUser"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/bio": {
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Uploads/Updates the bio of the current user",
+                "operationId": "",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Bio of the user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "bio": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Bio updated"
+                    }
+                }
+            }
+        },
         "/users": {
             "get": {
                 "security": [
@@ -866,6 +940,55 @@
             },
             "xml": {
                 "name": "feedArticle"
+            }
+        },
+        "viewProfileUser": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "bio": {
+                    "type": "string"
+                },
+                "profilePic": {
+                    "nullable": true,
+                    "properties": {
+                        "url": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "articles": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "_id": {
+                                "type": "string"
+                            },
+                            "title": {
+                                "type": "string"
+                            },
+                            "content": {
+                                "type": "string"
+                            },
+                            "createdOn": {
+                                "type": "string",
+                                "format": "date-time"
+                            }
+                        }
+                    }
+                }
+            },
+            "xml": {
+                "name": "User"
             }
         },
         "trendingArticle": {
