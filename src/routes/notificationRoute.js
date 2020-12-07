@@ -26,4 +26,29 @@ router.get('/', (req, res) => {
     })
 })
 
+router.put('/clear',(req,res)=>{
+    var notifications=req.body.notifications;
+    tokenAuthenticator(req,res,function(error,verifiedJwt){
+        if (error) {
+            return res.status(StatusCodes.UNAUTHORIZED).json({
+                error: { message: "UNAUTHORIZED" }
+            })
+        }else{
+            var userEmail = verifiedJwt.email;
+            controller.clearNotification(userEmail,notifications,function(error,result){
+                if(error){
+                    return res.status(StatusCodes.UNAUTHORIZED).json({
+                        error: { message: error }
+                    }) 
+                }else{
+                    return res.status(StatusCodes.CREATED).json({
+                        result: {
+                            "message": "notificatons cleared"
+                        }
+                    })
+                }
+            })
+        }
+    })
+})
 module.exports = router;
