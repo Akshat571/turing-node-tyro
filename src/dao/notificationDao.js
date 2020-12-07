@@ -53,3 +53,27 @@ module.exports.notifyFollowers = (authorId, title) => {
         }
     )
 }
+
+module.exports.deleteNotifications = (user, deleteNotifications, callback) => {
+    Notification.find({
+        email: user
+    }, function (error, notifications) {
+        if (error) {
+            callback({
+                message: "Couldnt find "
+            }, null)
+            return;
+        } else {
+            Notification.update(
+                { email: user },
+                { $pull:{notification: { _id: deleteNotifications } }}
+            ).exec(
+                function (error, result) {
+                    callback(error, result)
+                }
+            )
+         
+        }
+    })
+
+}
