@@ -1216,7 +1216,7 @@
         "notificationBody": {
             "type": "object",
             "properties": {
-                "notification": {
+                "notifications": {
                     "type": "array",
                     "items": {
                         "type": "string"

@@ -137,6 +137,9 @@ module.exports.readArticle = function (userEmail, articleId, callback) {
                 if (error) {
                     callback(error, null);
                 } else {
+                    if(article.noOfLikes==undefined){
+                        article.noOfLikes=0;
+                    }
                     article.hasLiked = false;
                     for (i = 0; i < article.peopleWhoLikedArticle.length; i++) {
                         if (article.peopleWhoLikedArticle[i].equals(user._id))

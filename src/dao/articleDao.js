@@ -5,7 +5,7 @@ const Notification = require('../models/notification');
 module.exports.createArticle = function (title, topics, content, authorId, success) {
     const date = new Date();
     var newArticle = new Article({
-        author: authorId, title: title, content: content, topics: topics, views: 0, createdOn: date
+        author: authorId, title: title, content: content, topics: topics, views: 0,noOfLikes:0, createdOn: date
     });
     newArticle.save(function (error, publishedArticle) {
         success(error, publishedArticle)
